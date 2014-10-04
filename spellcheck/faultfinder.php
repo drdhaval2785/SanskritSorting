@@ -113,10 +113,9 @@ return $vccccv;
 }
 
 $input = vccccv("PWKslp.txt");
-print_r($input);
+//print_r($input);
 /* testing in MW */
-$file1=file("MWdev.txt");
-$file1=array_map('convert1',$file1);
+$file1=file("MWslp.txt");
 foreach ($file1 as $value)
 {
     if(preg_match('/([aAiIuUfFxXeEoO][kKgGNcCjJYwWqQRtTdDnpPbBmyrlvzSs][kKgGNcCjJYwWqQRtTdDnpPbBmyrlvzSs][kKgGNcCjJYwWqQRtTdDnpPbBmyrlvzSs][kKgGNcCjJYwWqQRtTdDnpPbBmyrlvzSs][aAiIuUfFxXeEoO])/',$value))
@@ -127,7 +126,7 @@ foreach ($file1 as $value)
         {
             if ( !in_array($vccccvex[$i-1],$input ))
             {
-                echo "<p class=red>".$value." - ".$vccccvex[$i-1]."</p><br>";
+                echo '<b style="color:red">'.$value." - ".$vccccvex[$i-1]."</b><br>";
             }
             else
             {
