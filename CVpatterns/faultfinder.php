@@ -100,12 +100,7 @@ foreach ($file as $value)
         }
         
     }
-$vccccvarray = array_unique($vccccvarray);
-$vccccvarray = array_values($vccccvarray);
-sort($vccccvarray);
-print_r($vccccvarray);
-echo count($vccccvarray)."<br>";
-echo count($ac)*count($hlplus)*count($hlplus)*count($hlplus)*count($hlplus)*count($ac);
+}
 
 /* VCCCCCV pattern */
 /*foreach ($file as $value)
