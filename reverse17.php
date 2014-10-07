@@ -906,7 +906,7 @@ for($i=0;$i<count($text);$i++)
 
 /* code for counter of pratyayas */
 $counter=0;
-$pratyayas = file("sanskritsorting\morphologicends.txt");
+$pratyayas = file("morphologicends.txt");
 $pratyayas=array_map('trim',$pratyayas);
 $outputtext=array_map('trim',$outputtext);
 $pratyayasslp=array_map('convert1',$pratyayas);
@@ -930,7 +930,7 @@ for ($i=0;$i<count($array1);$i++)
     }
     if (count($e)>0)
     {
-  //          echo "( ".$array1[$i]['$pratyayas']." ) - ".count($e)."<br>";
+//            echo "( ".$array1[$i]['$pratyayas']." ) - ".count($e)."<br>";
             fputs($outfile,"( ".$array1[$i]['$pratyayas']." ) - ".count($e)."\r\n");
             $outputtext=array_diff($outputtext,$e);
     }
@@ -970,20 +970,22 @@ $fileopen=file("c:\\devanagarisorted.txt");
 $fileopen=array_map('trim',$fileopen);
 $fileopen=array_map('convert1',$fileopen);
 $outfile2=fopen("C://devanagarisorted1.html","w+");
-for ($i=0;$i<count($pratyayaslp);$i++)
+//print_r($pratyayasslp);
+for ($i=0;$i<count($pratyayas);$i++)
 {
-    $pra=preg_quote($pratyayaslp[$i]);
+    $pra=preg_quote($pratyayas[$i]);
             $count=0;
     for ($j=0;$j<count($fileopen);$j++)
     {
-        if(strpos(strrev($fileopen[$j],strrev($pratyayaslp($i)))) && $count=0)
+        if(substr($fileopen[$j],-strlen($pratyayasslp[$i]))===$pratyayasslp[$i] && $count===0 && $fileopen[$j]!==$pratyayasslp[$i])
         {
-            $fileopen[$j]=preg_replace('/(['.$pra.'])$/','<b>'.'$0'.'</b>',$fileopen[$j]);
+  //          echo "yes";
+            $fileopen[$j]=substr($fileopen[$j],0,strlen($fileopen[$j]-strlen($pratyayasslp[$i])))."<b>".$pratyayasslp[$i]."</b>";
             $count++;
         }
     }
 }
-$fileopen=array_map('convert',$fileopen);
+//$fileopen=array_map('convert',$fileopen);
 $senttext=implode("<br>",$fileopen);
 fputs($outfile2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -997,6 +999,8 @@ fputs($outfile2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 fputs($outfile2,$senttext);
 fputs($outfile2,'</body></html>');
 fclose($outfile2);
+
+
 
 
 ?> 
