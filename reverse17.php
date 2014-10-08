@@ -894,6 +894,10 @@ for($i=0;$i<count($text);$i++)
     fputs($outfile,"| ".json_decode('"'.$a[$i])." |"."\r\n");
     }
 //    echo json_decode($text[$i])."</br>";
+    
+    // if you want to add '\' at the begining and the end of the word
+//   $text[$i] = "/".str_replace("\r\n","/\r\n/",$text[$i])."/";
+
     fputs($outfile,json_decode($text[$i])."\r\n");
 }
 
@@ -903,6 +907,8 @@ for($i=0;$i<count($text);$i++)
 {
     fputs($outfile,$outputtext[$i]."\r\n");
 }*/
+
+
 
 /* code for counter of pratyayas */
 $counter=0;
