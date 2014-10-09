@@ -587,6 +587,48 @@ $ch['hk'] = array(
 67 => "`", // Latin apostrophe
 
 );
+$yukt = array(
+	
+	307 => "ृ", // R joint
+	308 => "ॄ", // q joint
+	309 => "ॢ",
+	310 => "ॣ", // W  joint
+	
+	311 => "े", // e joint
+	312 => "ै", // ai joint
+	313 => "ो", // o joint
+	314 => "ौ", // au joint
+	
+	301 => "&#8205;", // a joint
+	302 => "ा", // A joint
+	303 => "ि", // i joint
+	304 => "ी", // I joint
+	305 => "ु", // u joint
+	306 => "ू", // U joint
+	320 => "ुँ",
+       
+);
+$yukt1 = array(
+
+	307 => "ṛ", // joint
+	308 => "ṝ", // joint
+	309 => "ḷ",
+	310 => "ḹ", // joint
+	
+	311 => "e", // joint
+	312 => "ai", // joint
+	313 => "o", // joint
+	314 => "au", // joint
+	
+	301 => "a", // joint
+	302 => "ā", // joint
+	303 => "i", // joint
+	304 => "ī", // joint
+	305 => "u", // joint
+	306 => "ū", // joint
+	320 => "@",
+
+);
 
 // Specify the input data type
 $type = $ch['unicode'];
@@ -999,6 +1041,7 @@ $pratyayas=array_map('trim',$pratyayas);
 $outputtext=array_map('trim',$outputtext);
 $pratyayasslp=array_map('convert1',$pratyayas);
 $lengthpratyayas=array_map('strlen',$pratyayasslp);
+$pratyayastatistics=fopen("C:\\pratyayastatistics.txt","w+");
 for($i=0;$i<count($pratyayas);$i++)
 {
     $array1[$i] = array('$pratyayas' => $pratyayas[$i], '$pratyayasslp' => $pratyayasslp[$i], '$lengthpratyayas' => $lengthpratyayas[$i] );
@@ -1019,12 +1062,12 @@ for ($i=0;$i<count($array1);$i++)
     if (count($e)>0)
     {
 //            echo "( ".$array1[$i]['$pratyayas']." ) - ".count($e)."<br>";
-            fputs($outfile,"( ".$array1[$i]['$pratyayas']." ) - ".count($e)."\r\n");
+            fputs($pratyayastatistics,"-".slptoiast(convert1($array1[$i]['$pratyayas']))." ".count($e)."\r\n");
             $outputtext=array_diff($outputtext,$e);
     }
     $e=array();
 }
-
+fclose($pratyayastatistics);
 
 /* The code for sorting pratyayawise with numbers of words ending with pratyayas. */
 
@@ -1097,8 +1140,9 @@ fclose($outfile2);
 
 function slptoiast($text)
 {
-    global $ch;
+    global $ch; global $yukt; global $yukt1;
     $text=str_replace($ch['slp'],$ch['unicode'],$text);
+    $text=str_replace($yukt,$yukt1,$text);
     return $text;
 }
 function slash($text)
