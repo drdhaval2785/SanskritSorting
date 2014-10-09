@@ -140,6 +140,9 @@ $ch['unicode'] = array(
 108 => "dh", // .t
 109 => "ph", // .d 
 110 => "bh", // .n
+111 => "ai", // .d 
+112 => "au", // .n
+113 => "ḻ", // .n
 
 );
 
@@ -204,6 +207,9 @@ $ch['slp'] = array(
 108 => "D", // .t
 109 => "P", // .d 
 110 => "B", // .n
+111 => "E", // .d 
+112 => "O", // .n
+113 => "L", // .n
 
 );
 
@@ -970,11 +976,11 @@ for($i=0;$i<count($text);$i++)
     fputs($outfile,"| ".json_decode('"'.$a[$i])." |"."\r\n");
     }
 //    echo json_decode($text[$i])."</br>";
-    
-    // if you want to add '\' at the begining and the end of the word
-//   $text[$i] = "/".str_replace("\r\n","/\r\n/",$text[$i])."/";
+    $text[$i]=  json_decode($text[$i]);
+//$fileopen=array_map('convert',$fileopen);
 
-    fputs($outfile,json_decode($text[$i])."\r\n");
+
+    fputs($outfile,$text[$i]."\r\n");
 }
 
 
@@ -1067,8 +1073,12 @@ for ($i=0;$i<count($pratyayas);$i++)
         }
     }
 }
+
 $fileopen=array_map('slptoiast',$fileopen);
-//$fileopen=array_map('convert',$fileopen);
+// if you want to add '\' at the begining and the end of the word
+$fileopen=array_map('slash',$fileopen);
+// if you want to add # at the end of the word
+// $fileopen=array_map('addhash',$fileopen);
 $senttext=implode("<br>",$fileopen);
 fputs($outfile2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -1090,6 +1100,19 @@ function slptoiast($text)
     global $ch;
     $text=str_replace($ch['slp'],$ch['unicode'],$text);
     return $text;
+}
+function slash($text)
+{
+$text = "/".$text."/";
+$text = str_replace("/|","|",$text);
+$text = str_replace("|/","|",$text);
+return $text;
+}
+function addhash($text)
+{
+$text = $text."#";
+$text = str_replace("|#","|",$text);
+return $text;
 }
 ?> 
 
