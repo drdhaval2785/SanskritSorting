@@ -988,5 +988,4 @@ $i++;
 
 ?>
 
-</body>
-</html>
+</body></html>
