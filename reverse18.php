@@ -80,6 +80,23 @@ $numerals = '0123456789';
 
 // specifying the arrays of different datatypes
 $ch['unicode'] = array(
+1 => "ā", // _a
+2 => "ī", // _i
+3 => "ū", // _u
+4 => "ṛ", // .r
+5 => "ṝ", // _.r
+6 => "ṅ", // 'n
+7 => "ñ", // ~n
+8 => "ṭ", // .t
+9 => "ḍ", // .d 
+10 => "ṇ", // .n
+11 => "ś", // 's
+//11 => "ç", // 's
+12 => "ṣ", // .s
+13 => "ṁ", // 'm (anusvara)
+14 => "ḥ", // .h (visarga)
+15 => "ḷ", // .l
+16 => "ḹ", // _.l
 
 30 => "Ā", // _a
 31 => "Ī", // _i
@@ -101,23 +118,69 @@ $ch['unicode'] = array(
 50 => "Ḏ", // _D
 51 => "Ẏ", // .Y
 
-1 => "ā", // _a
-2 => "ī", // _i
-3 => "ū", // _u
-4 => "ṛ", // .r
-5 => "ṝ", // _.r
-6 => "ṅ", // 'n
-7 => "ñ", // ~n
-8 => "ṭ", // .t
-9 => "ḍ", // .d 
-10 => "ṇ", // .n
-11 => "ś", // 's
+20 => "ḏ", // _d
+21 => "ẏ", // .y
+
+60 => "ɱ", // \-/ (candrabindu)
+61 => "̮", // _ (ha_uk)
+62 => "^", // ^ (ext. sandhi)
+63 => "'", // avagraha
+64 => "ɱ", // \_/ (candra e)
+65 => "/x", // \ (virama)
+66 => "…", // abbreviation
+67 => "’", // Latin apostrophe
+
+101 => "kh", // _a
+102 => "gh", // _i
+103 => "ch", // _u
+104 => "jh", // .r
+105 => "ṭh", // _.r
+106 => "ḍh", // 'n
+107 => "th", // ~n
+108 => "dh", // .t
+109 => "ph", // .d 
+110 => "bh", // .n
+
+);
+
+$ch['slp'] = array(
+1 => "A", // _a
+2 => "I", // _i
+3 => "U", // _u
+4 => "f", // .r
+5 => "F", // _.r
+6 => "N", // 'n
+7 => "Y", // ~n
+8 => "w", // .t
+9 => "q", // .d 
+10 => "R", // .n
+11 => "S", // 's
 //11 => "ç", // 's
-12 => "ṣ", // .s
-13 => "ṁ", // 'm (anusvara)
-14 => "ḥ", // .h (visarga)
-15 => "ḷ", // .l
-16 => "ḹ", // _.l
+12 => "z", // .s
+13 => "M", // 'm (anusvara)
+14 => "H", // .h (visarga)
+15 => "x", // .l
+16 => "X", // _.l
+
+30 => "A", // _a
+31 => "I", // _i
+32 => "U", // _u
+33 => "f", // .r
+34 => "F", // _.r
+35 => "N", // 'n
+36 => "Y", // ~n
+37 => "w", // .t
+38 => "q", // .d
+39 => "R", // .n
+40 => "S", // 's
+41 => "z", // .s
+42 => "M", // 'm (anusvara)
+43 => "H", // .h (visarga)
+44 => "x", // .l
+45 => "X", // _.l
+
+50 => "Ḏ", // _D
+51 => "Ẏ", // .Y
 
 20 => "ḏ", // _d
 21 => "ẏ", // .y
@@ -131,7 +194,19 @@ $ch['unicode'] = array(
 66 => "…", // abbreviation
 67 => "’", // Latin apostrophe
 
+101 => "K", // _a
+102 => "G", // _i
+103 => "C", // _u
+104 => "J", // .r
+105 => "W", // _.r
+106 => "Q", // 'n
+107 => "T", // ~n
+108 => "D", // .t
+109 => "P", // .d 
+110 => "B", // .n
+
 );
+
 $ch['balaram'] = array(
 
 30 => "Ä", // _a
@@ -992,6 +1067,7 @@ for ($i=0;$i<count($pratyayas);$i++)
         }
     }
 }
+$fileopen=array_map('slptoiast',$fileopen);
 //$fileopen=array_map('convert',$fileopen);
 $senttext=implode("<br>",$fileopen);
 fputs($outfile2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
@@ -1009,7 +1085,12 @@ fclose($outfile2);
 
 
 
-
+function slptoiast($text)
+{
+    global $ch;
+    $text=str_replace($ch['slp'],$ch['unicode'],$text);
+    return $text;
+}
 ?> 
 
 
