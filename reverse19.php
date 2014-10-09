@@ -9,6 +9,8 @@
     <body>
 <?php
 
+include 'conf.php';
+
 /* Code written by Dr. Dhaval Patel, www.sanskritworld.in.
  * Version 1.0, Date: 2nd October, 2013
  * email: drdhaval2785@gmail.com
