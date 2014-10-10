@@ -61,7 +61,7 @@ $ch['slp'] = array(
 //62 => "^", // ^ (ext. sandhi)
 63 => "'", // avagraha
 64 => "&", // jihvAmUlIya)
-65 => "*", // upadhmAnIya
+//65 => "*", // upadhmAnIya
 //66 => "@", // abbreviation
 //67 => "`", // Latin apostrophe
 
@@ -114,7 +114,7 @@ $ch['hk'] = array(
 //62 => "^", // ^ (ext. sandhi)
 63 => "'", // avagraha
 64 => "&", // jihvamuliya
-65 => ".h", // upadhmAnIya
+//65 => ".h", // upadhmAnIya
 //66 => "@", // abbreviation
 //67 => "`", // Latin apostrophe
 
@@ -191,8 +191,8 @@ $main['tra'] = array(
 	147 => "sa",
 	
 
-	//156 => ";", // Udatta
-	//157 => ":", // Anudatta (svarita)
+	156 => "/", // Udatta
+	157 => "_", // Anudatta (svarita)
 	259 => "La",
 
 	

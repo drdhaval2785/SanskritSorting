@@ -42,10 +42,8 @@ error_reporting(0);
 include "dev-slp.php";
 include "slp-dev.php";
 
-// Read the file into an array. Please put your filename and location in place of "C:\devanagari.txt"
-$test = file("C:\devanagari.txt");
+$test = file($input);
 $test = array_map('convert',$test);
-//$test = file("C:\\Users\\Dhaval\\Desktop\\devanagari.txt");
 
 // $count counts the number of members in the array $test
 $count = count($test);
@@ -951,7 +949,6 @@ $outputtext[$i] = trim($outputtext[$i]);
 }
 
 $text = array_map('json_encode',$outputtext);
-$outfile=fopen("C:\\devanagarisorted.txt","w+");
 
 
 /* If you want code for header + counter for different headers + separate identity for 'kA',"khA' etc, keep this section open. */
@@ -998,7 +995,7 @@ $outfile=fopen("C:\\devanagarisorted.txt","w+");
 for($i=0;$i<count($text);$i++)
 {
     $a[$i]=substr($text[$i],-7);
-    $b[$i]=substr($text[$i],-13);
+    $b[$i]=substr($text[$i],-13);        
     if ($a[$i]==='\u094d"' && $b[$i]!==$b[$i-1])
     {
         if ($i!==0)
@@ -1038,12 +1035,10 @@ for($i=0;$i<count($text);$i++)
 
 /* code for counter of pratyayas */
 $counter=0;
-$pratyayas = file("morphologicends.txt");
 $pratyayas=array_map('trim',$pratyayas);
 $outputtext=array_map('trim',$outputtext);
 $pratyayasslp=array_map('convert1',$pratyayas);
 $lengthpratyayas=array_map('strlen',$pratyayasslp);
-$pratyayastatistics=fopen("C:\\pratyayastatistics.txt","w+");
 for($i=0;$i<count($pratyayas);$i++)
 {
     $array1[$i] = array('$pratyayas' => $pratyayas[$i], '$pratyayasslp' => $pratyayasslp[$i], '$lengthpratyayas' => $lengthpratyayas[$i] );
@@ -1098,11 +1093,9 @@ fclose($outfile);
 
 
 /* Highlighting first occurrence of the pratyaya */
-// not working.
 $fileopen=file("c:\\devanagarisorted.txt");
 $fileopen=array_map('convert1',$fileopen);
 $fileopen=array_map('trim',$fileopen);
-$outfile2=fopen("C://devanagarisorted1.html","w+");
 //print_r($pratyayasslp);
 for ($i=0;$i<count($pratyayas);$i++)
 {
@@ -1121,9 +1114,9 @@ for ($i=0;$i<count($pratyayas);$i++)
 
 $fileopen=array_map('slptoiast',$fileopen);
 // if you want to add '\' at the begining and the end of the word
-$fileopen=array_map('slash',$fileopen);
-// if you want to add # at the end of the word
-// $fileopen=array_map('addhash',$fileopen);
+//$fileopen=array_map('slash',$fileopen);
+// if you want to add # at the beginning and end of the word
+$fileopen=array_map('addhash',$fileopen);
 $senttext=implode("<br>",$fileopen);
 fputs($outfile2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -1156,7 +1149,8 @@ return $text;
 }
 function addhash($text)
 {
-$text = $text."#";
+$text = "#".$text."#";
+$text = str_replace("#|","|",$text);
 $text = str_replace("|#","|",$text);
 return $text;
 }
