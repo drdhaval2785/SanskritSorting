@@ -191,8 +191,8 @@ $main['tra'] = array(
 	147 => "sa",
 	
 
-	156 => "/", // Udatta
-	157 => "_", // Anudatta (svarita)
+//	156 => "/", // Udatta
+//	157 => "_", // Anudatta (svarita)
 	259 => "La",
 
 	
