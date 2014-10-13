@@ -1150,9 +1150,17 @@ fputs($out3,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt
 </head>
     <body>');
 for($i=1;$i<count($bookmarks)/2;$i++)
-{
+{ 
+    if ((substr($bookmarks[2*$i-1],-1)===substr($bookmarks[2*$i+1],-1)) || in_array($bookmarks[2*$i-1],array("k","kh","g","gh","ṅ","c","ch","j","jh","ñ","ṭ","ṭh","ḍ","ḍh","ṇ","t","th","d","dh","n","p","ph","b","bh","m","y","r","l","v","ś","ṣ","s"))) 
+    {
     $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
-    fwrite($out3,$bookmarks[(2*$i)-1].", ");
+        fwrite($out3,$bookmarks[(2*$i)-1].", ");
+    }
+    else
+    {
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
+        fwrite($out3,$bookmarks[(2*$i)-1].";<br> ");        
+    }
     $bookmarks[(2*$i)-1]=str_replace('-<a href="#','| <a id="',$bookmarks[(2*$i)-1]);
     $bookmarks[(2*$i)-1]=str_replace('</a>','</a> |',$bookmarks[(2*$i)-1]);
 }
