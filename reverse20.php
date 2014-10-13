@@ -1151,9 +1151,10 @@ fputs($out3,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt
     <body>');
 for($i=1;$i<count($bookmarks)/2;$i++)
 {
-    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'| <a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a> |",$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
     fwrite($out3,$bookmarks[(2*$i)-1].", ");
-    $bookmarks[(2*$i)-1]=str_replace('<a href="#','<a id="',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace('-<a href="#','| <a id="',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace('</a>','</a> |',$bookmarks[(2*$i)-1]);
 }
 fputs($out3,"<br>");
 $finaldisplay=implode("",$bookmarks);
