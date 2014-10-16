@@ -1141,7 +1141,6 @@ for ($i=0;$i<count($pratyayas);$i++)
         }
     }
 }
-
 $fileopen=array_map('slptoiast',$fileopen);
 // if you want to add '\' at the begining and the end of the word
 //$fileopen=array_map('slash',$fileopen);
@@ -1208,8 +1207,9 @@ for($i=1;$i<count($bookmarks)/2;$i++)
     }
     $bookmarks[(2*$i)-1]=str_replace('-<a href="#','| <a id="',$bookmarks[(2*$i)-1]);
     $bookmarks[(2*$i)-1]=str_replace('</a>','</a> |',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)]=$bookmarks[(2*$i)]."<br>";
 }
-fputs($out3,"<br>");
+fputs($out3,"<br><br>");
 $finaldisplay=implode("",$bookmarks);
 //echo $finaldisplay;
 fputs($out3,$finaldisplay);
