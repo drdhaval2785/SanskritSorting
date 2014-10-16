@@ -1193,7 +1193,7 @@ for($i=1;$i<count($bookmarks)/2;$i++)
     if (in_array($bookmarks[2*$i-1],$vowcon) && in_array($bookmarks[2*$i+1],$d))
     {
     $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
-        fwrite($out3,$bookmarks[(2*$i)-1].";<br> ");                
+        fwrite($out3,$bookmarks[(2*$i)-1].";<br/> ");                
     }
     elseif ((substr($bookmarks[2*$i-1],-1)===substr($bookmarks[2*$i+1],-1)) || in_array($bookmarks[2*$i-1],$vowcon))
     {
@@ -1203,13 +1203,13 @@ for($i=1;$i<count($bookmarks)/2;$i++)
     else
     {
     $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
-        fwrite($out3,$bookmarks[(2*$i)-1].";<br> ");        
+        fwrite($out3,$bookmarks[(2*$i)-1].";<br/> ");        
     }
-    $bookmarks[(2*$i)-1]=str_replace('-<a href="#','| <a id="',$bookmarks[(2*$i)-1]);
-    $bookmarks[(2*$i)-1]=str_replace('</a>','</a> |',$bookmarks[(2*$i)-1]);
-    $bookmarks[(2*$i)]=$bookmarks[(2*$i)]."<br>";
+    $bookmarks[(2*$i)-1]=str_replace('-<h2><a href="#','| <a id="',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace('</a></h2>','</a> |',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)]=$bookmarks[(2*$i)]."<br/>";
 }
-fputs($out3,"<br><br>");
+fputs($out3,"<br/><br/>");
 $finaldisplay=implode("",$bookmarks);
 //echo $finaldisplay;
 fputs($out3,$finaldisplay);
