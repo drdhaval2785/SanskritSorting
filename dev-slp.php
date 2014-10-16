@@ -82,6 +82,7 @@ $main['tra'] = array(
 //	201 => "Pha",
 //	200 => "Pa",
 	259 => "La",
+	260 => "|a",
 	
 	148 => "ha",
 );
@@ -205,6 +206,7 @@ $main['scr'] = array(
 //	200 => "ড়", // Pa
 
 	259 => "ळ", // L
+	260 => "ळ्ह", // L
 	
 	148 => "ह", // ha
 );
@@ -300,6 +302,9 @@ $yukta['scr'] = array(
 	$tidyr = array("\n");
 	
 	$text = trim(str_replace($tidys, $tidyr, $text));
+$text = str_replace("कॢ","kx",$text); // patch for ळ removal
+$text = str_replace("ऌ","x",$text); // patch for ळ removal
+$text = str_replace("ळ्ह","|",$text); // patch for ळ removal
 
 return $text;
 }

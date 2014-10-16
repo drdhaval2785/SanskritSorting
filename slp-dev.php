@@ -123,7 +123,9 @@ $ch['hk'] = array(
 	$text = str_replace("&nbsp;","",$text);				
 
 	/* Main Converter Part */
-$text = str_replace("kxp","कॢप्‍",$text); // patch for ळ removal
+$text = str_replace("kx","कॢ",$text); // patch for ळ removal
+$text = str_replace("x","ऌ",$text); // patch for ळ removal
+$text = str_replace("|a","ळ्ह",$text); // patch for ळ removal
 $text = str_replace("\n ", "\n", $text);
 $text = str_replace(" /'","/'",$text);
 $text = str_replace($ch['slp'],$ch['hk'],$text);
@@ -194,6 +196,7 @@ $main['tra'] = array(
 //	156 => "/", // Udatta
 //	157 => "_", // Anudatta (svarita)
 	259 => "La",
+	359 => "|a",
 
 	
 //	201 => "Pha",
@@ -322,6 +325,7 @@ $main['scr'] = array(
 	//156 => "॑", // Udatta
 	//157 => "॒", // Anudatta (svarita)
 	259 => "ळ", // L
+	359 => "ळ्ह", // L
 
 	
 //	201 => "ঢ়", // Pha
