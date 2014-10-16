@@ -1176,18 +1176,7 @@ $vowcon=array("k","kh","g","gh","ṅ","c","ch","j","jh","ñ","ṭ","ṭh","ḍ",
 $in=file_get_contents($outfile2); 
 $out3=fopen($outfile3,"w+");
 $bookmarks=preg_split('/[|][ ]([^|]*)[ ][|]/',$in,null,PREG_SPLIT_DELIM_CAPTURE);
-fputs($out3,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
-  <!--<meta name="language" content="hi"> -->
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </meta>
-<!--... including jquery. -->
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" ></script>
-<!--... script.js is javascript which we use to make the frontend interective for user feedback. Whenever the user clicks the radio button specified in script.js, the data is sent to ajax.php and then output from ajax.php is shown in the frontend. This process may continue as long as you want. -->
-<script src="script1.js" ></script>  
-</head>
-    <body>');
+fputs($out3,'');
 for($i=1;$i<count($bookmarks)/2;$i++)
 { 
     if (in_array($bookmarks[2*$i-1],$vowcon) && in_array($bookmarks[2*$i+1],$d))
