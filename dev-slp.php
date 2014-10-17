@@ -287,8 +287,8 @@ $yukta['scr'] = array(
 	
 	/* Crunch remaining full vowels, e.g. ha_uk  and sei */
 	
-	$text = str_replace("a" . str_replace(" ", "", $vow['scr'][253]), "a_i",  $text);
-	$text = str_replace("a" . str_replace(" ", "", $vow['scr'][255]), "a_u",  $text);
+//	$text = str_replace("a" . str_replace(" ", "", $vow['scr'][253]), "a_i",  $text);
+//	$text = str_replace("a" . str_replace(" ", "", $vow['scr'][255]), "a_u",  $text);
 
 	foreach ($vow['scr'] as $key => $val) {
 		$objscr = str_replace(" ", "", $val);
