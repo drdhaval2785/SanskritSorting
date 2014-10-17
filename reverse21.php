@@ -1177,7 +1177,15 @@ $vowcon=array("k","kh","g","gh","ṅ","c","ch","j","jh","ñ","ṭ","ṭh","ḍ",
 $in=file_get_contents($outfile2); 
 $out3=fopen($outfile3,"w+");
 $bookmarks=preg_split('/[|][ ]([^|]*)[ ][|]/',$in,null,PREG_SPLIT_DELIM_CAPTURE);
-fputs($out3,'');
+fputs($out3,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
+  <!--<meta name="language" content="hi"> -->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </meta>
+  
+</head>
+    <body>');
 for($i=1;$i<count($bookmarks)/2;$i++)
 { 
     if (in_array($bookmarks[2*$i-1],$vowcon) && in_array($bookmarks[2*$i+1],$d))
@@ -1197,10 +1205,10 @@ for($i=1;$i<count($bookmarks)/2;$i++)
     }
     $bookmarks[(2*$i)-1]=str_replace('-<a href="#','| <a id="',$bookmarks[(2*$i)-1]);
     $bookmarks[(2*$i)-1]=str_replace('</a>','</a> |',$bookmarks[(2*$i)-1]);
-    $bookmarks[(2*$i)]=$bookmarks[(2*$i)]."<br>";
+    $bookmarks[(2*$i)]=$bookmarks[(2*$i)]."<br/>";
     $bookmarks[0]="";
 }
-fputs($out3,"<br/><br/>");
+fputs($out3,"<br/>");
 $finaldisplay=implode("",$bookmarks);
 //echo $finaldisplay;
 fputs($out3,$finaldisplay);
