@@ -957,7 +957,9 @@ for($i=0;$i<count($outputtext);$i++)
 {
     $text1[$i]=str_replace(array("१","२","३","४","५","६","७","८","९","०",),array("","","","","","","","","","",),$outputtext[$i]);
 }
-$text2=array_map('json_encode',$text1);
+$text2=array_map('accent',$text1);
+print_r($text2);
+$text2=array_map('json_encode',$text2);
 
 $out1=fopen($outfile,"w+");
 
@@ -1208,8 +1210,9 @@ for($i=1;$i<count($bookmarks)/2;$i++)
     $bookmarks[(2*$i)-1]=str_replace('-<a href="#','| <a id="',$bookmarks[(2*$i)-1]);
     $bookmarks[(2*$i)-1]=str_replace('</a>','</a> |',$bookmarks[(2*$i)-1]);
     $bookmarks[(2*$i)]=$bookmarks[(2*$i)]."<br>";
+    $bookmarks[0]="";
 }
-fputs($out3,"<br><br>");
+fputs($out3,"<br>");
 $finaldisplay=implode("",$bookmarks);
 //echo $finaldisplay;
 fputs($out3,$finaldisplay);
@@ -1234,6 +1237,11 @@ function addhash($text)
 $text = "#".$text."#";
 $text = str_replace("#|","|",$text);
 $text = str_replace("|#","|",$text);
+return $text;
+}
+function accent($text)
+{
+$text = stripslashes($text);
 return $text;
 }
 ?> 
