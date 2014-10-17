@@ -1210,6 +1210,7 @@ for($i=1;$i<count($bookmarks)/2;$i++)
 }
 fputs($out3,"<br/>");
 $finaldisplay=implode("",$bookmarks);
+$finaldisplay=addaccent($finaldisplay);
 //echo $finaldisplay;
 fputs($out3,$finaldisplay);
 fclose($out3);
@@ -1238,6 +1239,11 @@ return $text;
 function removeaccent($text)
 {
 $text = stripslashes($text);
+return $text;
+}
+function addaccent($text)
+{
+$text = str_replace(array("a\\"),array("á",),$text);
 return $text;
 }
 ?> 
