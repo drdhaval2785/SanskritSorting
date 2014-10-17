@@ -256,7 +256,7 @@ $other['tra'] = array(
 	152 => "||", // ||
 	153 => "|", // |
 	154 => "&", // jihvAmUliya
-	155 => "*", // upadhmAnIya
+//	155 => "*", // upadhmAnIya
 );
 
 $num['scr'] = array(
@@ -384,7 +384,7 @@ $other['scr'] = array(
 	152 => "॥", // ||
 	153 => "।", // |
 	154 => "ᳲ", // . Nukta
-	155 => "ᳲ", // Abbreviation
+//	155 => "ᳲ", // Abbreviation
 );
 
 $yukta['scr'][301] = "";
@@ -392,7 +392,7 @@ $yukta['scr'][301] = "";
 
 $text = " " . $text;
 $text = str_replace("-", "- ", $text); // Ensure full vowel is given after dash
-	$text = str_replace("^", "", $text); // Remove external sandhi break
+//	$text = str_replace("^", "", $text); // Remove external sandhi break
 	$text = str_replace("%", "", $text); // Remove XHK capital letter sign
 
 /* Create half-consonants */

@@ -1,4 +1,4 @@
-﻿﻿﻿﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+﻿﻿﻿﻿﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <META HTTP-EQUIV="Content-Language" CONTENT="HI">
   <!--<meta name="language" content="hi"> -->
@@ -37,14 +37,15 @@ ini_set('max_execution_time', 360000);
 // set memory limit to 1000 MB
 ini_set("memory_limit","100000M");
 // hides error reports.
-error_reporting(0);
+//error_reporting(0);
 // include files for conversion SLP and devanagari.
 include "dev-slp.php";
 include "slp-dev.php";
 
-$test = file($input);
+$test = explode(";",file_get_contents($input));
 $test = array_map('convert',$test);
-
+$test=array_diff($test,array($test[count($test)-1]));
+print_r($test);
 // $count counts the number of members in the array $test
 $count = count($test);
 //array having consonants of devanagari converted to their unicode codepoint.
@@ -959,6 +960,7 @@ for($i=0;$i<count($outputtext);$i++)
 }
 $text2=array_map('removeaccent',$text1);
 $text2=array_map('json_encode',$text2);
+
 $out1=fopen($outfile,"w+");
 
 /* If you want code for header + counter for different headers + separate identity for 'kA',"khA' etc, keep this section open. */
@@ -1211,6 +1213,7 @@ for($i=1;$i<count($bookmarks)/2;$i++)
 fputs($out3,"<br/><br/>");
 $finaldisplay=implode("",$bookmarks);
 $finaldisplay=addaccent($finaldisplay);
+//echo $finaldisplay;
 fputs($out3,$finaldisplay);
 fclose($out3);
 
@@ -1238,16 +1241,11 @@ return $text;
 function removeaccent($text)
 {
 $text = stripslashes($text);
-    $a=array("\\","/","^","-","°","*","(",")","[","]");
-    $b=array("","","","","","","","","","");
-$text = str_replace($a,$b,$text);
 return $text;
 }
 function addaccent($text)
 {
-    $a=array("a\\","a/","a^","ā\\","ā/","ā^","i\\","i/","i^","ī\\","ī/","ī^","u\\","u/","u^","ū\\","ū/","ū^","ṛ\\","ṛ/","ṛ^","ṝ\\","ṝ/","ṝ^","ḷ\\","ḷ/","ḷ^","e\\","e/","e^","o\\","o/","o^",);
-    $b=array("à","á","â","ā̀","ā́","ā̂","ì","í","î","ī́","ī̀","ù","ú","û","ú̱","ū̀","ū́","ū̂","ṛ̀","ṛ́","ṛ̂","ṝ̀","ṝ́","ṝ̂","ḷ̀","ḷ́","ḷ̂","è","é","ê","ò","ó","ô");
-$text = str_replace($a,$b,$text);
+$text = str_replace(array("a\\"),array("á",),$text);
 return $text;
 }
 ?> 
