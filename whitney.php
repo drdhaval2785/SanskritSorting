@@ -45,7 +45,6 @@ include "slp-dev.php";
 $test = explode(";",file_get_contents($input));
 $test = array_map('convert',$test);
 $test=array_diff($test,array($test[count($test)-1]));
-print_r($test);
 // $count counts the number of members in the array $test
 $count = count($test);
 //array having consonants of devanagari converted to their unicode codepoint.
