@@ -958,7 +958,6 @@ for($i=0;$i<count($outputtext);$i++)
     $text1[$i]=str_replace(array("१","२","३","४","५","६","७","८","९","०",),array("","","","","","","","","","",),$outputtext[$i]);
 }
 $text2=array_map('accent',$text1);
-print_r($text2);
 $text2=array_map('json_encode',$text2);
 
 $out1=fopen($outfile,"w+");
