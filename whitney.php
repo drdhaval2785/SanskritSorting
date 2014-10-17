@@ -37,7 +37,7 @@ ini_set('max_execution_time', 360000);
 // set memory limit to 1000 MB
 ini_set("memory_limit","100000M");
 // hides error reports.
-//error_reporting(0);
+error_reporting(0);
 // include files for conversion SLP and devanagari.
 include "dev-slp.php";
 include "slp-dev.php";
@@ -951,7 +951,20 @@ $outputtext[$i] = trim($outputtext[$i]);
  $i++;
  
 }
+$outputtext = array_map('convert1',$outputtext);
+$outputtext = array_map('slptoiast',$outputtext);
+$go= implode("; ",$outputtext);
+$out1=fopen($outfile,"w+");
+fputs($out1,$go);
+function slptoiast($text)
+{
+    global $ch; global $yukt; global $yukt1;
+    $text=str_replace($ch['slp'],$ch['unicode'],$text);
+    $text=str_replace($yukt,$yukt1,$text);
+    return $text;
+}
 
+/*
 $text = array_map('json_encode',$outputtext);
 for($i=0;$i<count($outputtext);$i++)
 {
@@ -961,9 +974,9 @@ $text2=array_map('removeaccent',$text1);
 $text2=array_map('json_encode',$text2);
 
 $out1=fopen($outfile,"w+");
-
+*/
 /* If you want code for header + counter for different headers + separate identity for 'kA',"khA' etc, keep this section open. */
-for($i=0;$i<count($text2);$i++)
+/*for($i=0;$i<count($text2);$i++)
 {
     
     $a[$i]=substr($text2[$i],-7);
@@ -1014,7 +1027,8 @@ for($i=0;$i<count($text2);$i++)
 //    echo json_decode($text[$i])."</br>";
     fputs($out1,json_decode($text[$i])."\r\n");
 }
-
+fclose($out1);
+*/
 
 /* If you want code for header + counter for different headers (without 'kA','khA' etc), keep this section open. */
 /*for($i=0;$i<count($text);$i++)
@@ -1059,10 +1073,10 @@ for($i=0;$i<count($text2);$i++)
 
 
 /* code for counter of pratyayas */
-$counter=0;
+/*$counter=0;
 $pratyayas=array_map('trim',$pratyayas);
 $outputtext=array_map('trim',$outputtext);
-$pratyayasslp=array_map('convert1',$pratyayas);
+$p8ratyayasslp=array_map('convert1',$pratyayas);
 $lengthpratyayas=array_map('strlen',$pratyayasslp);
 for($i=0;$i<count($pratyayas);$i++)
 {
@@ -1095,7 +1109,7 @@ for ($i=0;$i<count($array1);$i++)
     }
     $e=array();
 }
-fclose($pratyayastatistics);
+fclose($pratyayastatistics);*/
 
 /* The code for sorting pratyayawise with numbers of words ending with pratyayas. */
 
@@ -1120,11 +1134,10 @@ fclose($pratyayastatistics);
     $e=array();
 }*/
 
-fclose($out1);
 
 
 /* Highlighting first occurrence of the pratyaya */
-$out2=fopen($outfile2,"w+");
+/*$out2=fopen($outfile2,"w+");
 $fileopen=file($outfile);
 $fileopen=array_map('convert1',$fileopen);
 $fileopen=array_map('trim',$fileopen);
@@ -1160,9 +1173,9 @@ fputs($out2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "htt
 fputs($out2,$senttext);
 fputs($out2,'<br></body></html>');
 fclose($out2);
-
+*/
 /* creating an array */
-$a=array("a","A","i","I","u","U","f","F","x","X","e","o","E","O",);
+/*$a=array("a","A","i","I","u","U","f","F","x","X","e","o","E","O",);
 $b=array("k","K","g","G","c","C","j","J","w","W","q","Q","R","t","T","d","D","n","p","P","b","B","m","y","r","l","v","S","z","s","L","|",);
 foreach ($a as $val1)
 {
@@ -1173,8 +1186,9 @@ foreach ($a as $val1)
 }
 $d=array_map('slptoiast',$c);
 $vowcon=array("k","kh","g","gh","ṅ","c","ch","j","jh","ñ","ṭ","ṭh","ḍ","ḍh","ṇ","t","th","d","dh","n","p","ph","b","bh","m","y","r","l","v","ś","ṣ","s","|","ḻ","a","ā","i","ī","u","ū","ṛ","ṝ","ḷ","ḹ","e","ai","o","au","ṁ","ḥ");
+*/
 /* code for creating an index like that of Oliver's */
-$in=file_get_contents($outfile2); 
+/*$in=file_get_contents($outfile2); 
 $out3=fopen($outfile3,"w+");
 $bookmarks=preg_split('/[|][ ]([^|]*)[ ][|]/',$in,null,PREG_SPLIT_DELIM_CAPTURE);
 fputs($out3,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
@@ -1240,13 +1254,18 @@ return $text;
 function removeaccent($text)
 {
 $text = stripslashes($text);
+    $a=array("\\","/","^","-","°","*","(",")","[","]");
+    $b=array("","","","","","","","","","");
+$text = str_replace($a,$b,$text);
 return $text;
 }
 function addaccent($text)
 {
-$text = str_replace(array("a\\"),array("á",),$text);
+    $a=array("a\\","a/","a^","ā\\","ā/","ā^","i\\","i/","i^","ī\\","ī/","ī^","u\\","u/","u^","ū\\","ū/","ū^","ṛ\\","ṛ/","ṛ^","ṝ\\","ṝ/","ṝ^","ḷ\\","ḷ/","ḷ^","e\\","e/","e^","o\\","o/","o^",);
+    $b=array("à","á","â","ā̀","ā́","ā̂","ì","í","î","ī́","ī̀","ù","ú","û","ú̱","ū̀","ū́","ū̂","ṛ̀","ṛ́","ṛ̂","ṝ̀","ṝ́","ṝ̂","ḷ̀","ḷ́","ḷ̂","è","é","ê","ò","ó","ô");
+$text = str_replace($a,$b,$text);
 return $text;
-}
+}*/
 ?> 
 
 
