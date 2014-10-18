@@ -1208,7 +1208,7 @@ for($i=1;$i<count($bookmarks)/2;$i++)
     $bookmarks[(2*$i)]=$bookmarks[(2*$i)]."<br/>";
     $bookmarks[0]="";
 }
-fputs($out3,"<br/><br/>");
+fputs($out3,"<br/>");
 $finaldisplay=implode("",$bookmarks);
 $finaldisplay=addaccent($finaldisplay);
 fputs($out3,$finaldisplay);
