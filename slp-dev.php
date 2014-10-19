@@ -194,7 +194,8 @@ $main['tra'] = array(
 	
 
 //	156 => "/", // Udatta
-//	157 => "_", // Anudatta (svarita)
+//	157 => "\\", // Anudatta (svarita)
+//        357 => "^",
 	259 => "La",
 	359 => "|a",
 
@@ -322,8 +323,9 @@ $main['scr'] = array(
 
 	
 	
-	//156 => "॑", // Udatta
-	//157 => "॒", // Anudatta (svarita)
+//	156 => "॔", // Udatta
+//	157 => "॓", // Anudatta (svarita)
+//        357 => "॑", // svarita
 	259 => "ळ", // L
 	359 => "ळ्ह", // L
 
