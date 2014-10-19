@@ -1218,6 +1218,10 @@ $finaldisplay=addaccent($finaldisplay);
 fputs($out3,$finaldisplay);
 fclose($out3);
 
+$in4=  file_get_contents($outfile);
+$in4=str_replace(array("\\","/","^",),array("॒","॔","॑",),$in4);
+file_put_contents($outfile,$in4);
+
 function slptoiast($text)
 {
     global $ch; global $yukt; global $yukt1;
@@ -1250,7 +1254,7 @@ return $text;
 function addaccent($text)
 {
     $a=array("a\\","a/","a^","ā\\","ā/","ā^","i\\","i/","i^","ī\\","ī/","ī^","u\\","u/","u^","ū\\","ū/","ū^","ṛ\\","ṛ/","ṛ^","ṝ\\","ṝ/","ṝ^","ḷ\\","ḷ/","ḷ^","e\\","e/","e^","o\\","o/","o^",);
-    $b=array("à","á","â","ā̀","ā́","ā̂","ì","í","î","ī́","ī̀","ù","ú","û","ú̱","ū̀","ū́","ū̂","ṛ̀","ṛ́","ṛ̂","ṝ̀","ṝ́","ṝ̂","ḷ̀","ḷ́","ḷ̂","è","é","ê","ò","ó","ô");
+    $b=array("à","á","â","ā̀","ā́","ā̂","ì","í","î","ī̀","ī́","ī̂","ù","ú","û","ū̀","ū́","ū̂","ṛ̀","ṛ́","ṛ̂","ṝ̀","ṝ́","ṝ̂","ḷ̀","ḷ́","ḷ̂","è","é","ê","ò","ó","ô");
 $text = str_replace($a,$b,$text);
 return $text;
 }
