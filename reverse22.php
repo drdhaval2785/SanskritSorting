@@ -955,16 +955,17 @@ $outputtext[$i] = trim($outputtext[$i]);
  $i++;
  
 }
+$text2= array_map('removeaccent',$outputtext);
 $outputtext = array_map('convert',$outputtext);
 $text = array_map('json_encode',$outputtext);
 for($i=0;$i<count($outputtext);$i++)
 {
-    $text1[$i]=str_replace(array("१","२","३","४","५","६","७","८","९","०",),array("","","","","","","","","","",),$outputtext[$i]);
+    $text1[$i]=str_replace(array("१","२","३","४","५","६","७","८","९","०"),array("","","","","","","","","","",""),$outputtext[$i]);
+    $text2[$i]=str_replace(array("1","2","3","4","5","6","7","8","9","0"),array("","","","","","","","","","",""),$text2[$i]);
 }
-$text2=array_map('removeaccent',$text1);
+$text2= array_map('convert',$text2);
 $text2=array_map('json_encode',$text2);
 $out1=fopen($outfile,"w+");
-
 /* If you want code for header + counter for different headers + separate identity for 'kA',"khA' etc, keep this section open. */
 for($i=0;$i<count($text2);$i++)
 {
@@ -1003,7 +1004,7 @@ for($i=0;$i<count($text2);$i++)
 //    echo "| ".json_decode('"'.$b[$i])." |"."</br>";                
     fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
     }
-    elseif ($a[$i]!==$a[$i-1] )
+    elseif ($a[$i]!==$a[$i-1] && !in_array($a[$i],array("\u002d")))
     {
 
         if ($i!==0)
@@ -1246,8 +1247,8 @@ return $text;
 function removeaccent($text)
 {
 $text = stripslashes($text);
-    $a=array("\\","/","^","-","°","*","(",")","[","]");
-    $b=array("","","","","","","","","","");
+    $a=array("\\","/","^","-","°","*","(",")","[","]","-","?");
+    $b=array("","","","","","","","","","","","");
 $text = str_replace($a,$b,$text);
 return $text;
 }
