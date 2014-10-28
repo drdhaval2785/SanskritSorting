@@ -924,17 +924,12 @@ $k++;
 $array[$i]['$original'] = json_decode($array[$i]['$original']);
 }
   
-    /* Changing $array[$i]['$post'] to "" where it was changed to 0 for proper sorting */
-if ($array[$i]['$post']!==0)
-{
+    /* Coding for displaying the output in .txt file or showing in the browser. */
+ 
+// this will show $pre, $original and $post separated by a space. ltrim removes the left white spaces and chop removes the right white spaces if any.
 $outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']." ".$array[$i]['$post']));
-}
-else 
-{
-$outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']));    
-}
-
-$i++; 
+$outputtext[$i] = trim($outputtext[$i]);
+$i++;
 }
 
             /* Coding for Output to the .txt file */
@@ -947,8 +942,7 @@ for($i=0;$i<count($text);$i++)
 {
     fputs($out1,$outputtext[$i]."\r\n");
 }    
-fputs($trial,$outtext);
-fclose ($trial);
+fclose ($out1);
 
     // If you want to echo the output to the browser, uncomment this section. 
     // If you dont want to have output in .txt file, also comment the code above.

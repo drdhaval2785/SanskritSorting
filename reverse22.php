@@ -720,7 +720,6 @@ if (preg_match('/[0-9]+/',$a[0]))
         }
         
 }
-//echo json_encode("a b")."<br>";
 // Now our four parameters are defined for all four possibility. First number- last number, first number - last no number, first no number - last number, first no  number - last no number.
 
 // Now we will sort our array according to the $c parameter, because we have removed the (,*,) and such other characters from the $c.
@@ -951,9 +950,7 @@ $array[$i]['$original'] = json_decode($array[$i]['$original']);
 // this will show $pre, $original and $post separated by a space. ltrim removes the left white spaces and chop removes the right white spaces if any.
 $outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']." ".$array[$i]['$post']));
 $outputtext[$i] = trim($outputtext[$i]);
-
- $i++;
- 
+$i++;
 }
 $text2= array_map('removeaccent',$outputtext);
 $outputtext = array_map('convert',$outputtext);
