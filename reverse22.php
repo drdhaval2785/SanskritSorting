@@ -4,7 +4,7 @@
   <!--<meta name="language" content="hi"> -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </meta>
-  
+  </META>
 </head>
     <body>
 <?php
@@ -849,7 +849,6 @@ $c[$i] = str_replace("\u0960","\u090b^",$c[$i]);
 $c[$i] = str_replace("\u0961","\u090c^",$c[$i]);
 $c[$i] = str_replace("\u0962","\u0944^",$c[$i]);
 $c[$i] = str_replace("\u0963","\u0944_",$c[$i]);
-
 
                /* Coding for correcting the position of anusvAra and visarga between "au" and "ka" in reverse order. */
 $c[$i] = str_replace("\u0902\u0902","\u0914!",$c[$i]);

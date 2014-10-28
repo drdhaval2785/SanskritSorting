@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <META HTTP-EQUIV="Content-Language" CONTENT="HI">
   <!--<meta name="language" content="hi"> -->
@@ -879,21 +879,26 @@ $i++;
 $i=0;
 while ($i<count($test))
 {
-$array[$i] = array('$c' => $c[$i], '$original' => $original[$i], '$pre' => $pre[$i] , '$post' => $post[$i]);
+//$array[$i] = array('$c' => $c[$i], '$original' => $original[$i], '$pre' => $pre[$i] , '$post' => $post[$i]);
+// for accents we take $orig. Otherwise for numbered series etc we take $original.
+$array[$i] = array('$c' => $c[$i], '$original' => $orig[$i], '$pre' => $pre[$i] , '$post' => $post[$i]);
 $i++;
 }
 
-
-// Obtain a list of columns
-foreach ($array as $key => $row) {
-    $c[$key]  = $row['$c'];
-    $post[$key] = $row['$post'];
+function build_sorter($key) {
+    return function ($a, $b) use ($key) {
+        return strcmp($a[$key], $b[$key]);
+    };
 }
 
-// Sort the data with $c as string ascending, $post as number by natural sorting.
-// Add $array as the last parameter, to sort by the common key
-array_multisort($c, SORT_ASC, $post, SORT_NATURAL, $array);
-//Print_r($array);
+function build_sorter1($key) {
+    return function ($a, $b) use ($key) {
+        return strcmp($b[$key], $a[$key]);
+    };
+}
+
+// Sorting $array by $c.
+usort($array, build_sorter('$c'));
 
 
 $i=0;
@@ -902,7 +907,9 @@ while($i<count($test))
     
     
 // If you want to keep anusvaras and don't want to convert the panchama letters back to anusvaras, uncomment this section.    
-/*
+// $panchama is 0 by default. If you want you can change it to 1 in conf.php.
+if ($panchama===1)
+{
 $array[$i]['$original']= json_encode($array[$i]['$original']);
     $k=0;
 While($k<5)
@@ -915,7 +922,7 @@ $array[$i]['$original']= str_replace("\u092e\u094d".$pavarga[$k],"\u0902".$pavar
 $k++;
 }
 $array[$i]['$original'] = json_decode($array[$i]['$original']);
-*/
+}
   
     /* Changing $array[$i]['$post'] to "" where it was changed to 0 for proper sorting */
 if ($array[$i]['$post']!==0)
@@ -930,23 +937,24 @@ $outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']));
 $i++; 
 }
 
-
-$outtext = implode ($outputtext,"\r\n");
-
             /* Coding for Output to the .txt file */
 
     
     // write the location and the file name in which you want the output, in $trial.
 
-$trial= fopen("C:\\devanagarisorted.txt",'w+');
+$out1=fopen($outfile,"w+");
+for($i=0;$i<count($text);$i++)
+{
+    fputs($out1,$outputtext[$i]."\r\n");
+}    
 fputs($trial,$outtext);
 fclose ($trial);
 
     // If you want to echo the output to the browser, uncomment this section. 
     // If you dont want to have output in .txt file, also comment the code above.
  
-$outtext = str_replace("\r\n","</br>",$outtext);
- echo $outtext."</br>";
+/*$outtext = str_replace("\r\n","</br>",$outtext);
+ echo $outtext."</br>";*/
 
 ?> 
         </body>
