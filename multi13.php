@@ -31,7 +31,7 @@ ini_set('max_execution_time', 360000);
 // set memory limit to 1000 MB
 ini_set("memory_limit","100000M");
 // hides error reports.
-error_reporting(0);
+//error_reporting(0);
 // include files for conversion SLP and devanagari.
 include "dev-slp.php";
 include "slp-dev.php";
@@ -936,9 +936,9 @@ $i++;
 
     
     // write the location and the file name in which you want the output, in $trial.
-
+print_r($outputtext);
 $out1=fopen($outfile,"w+");
-for($i=0;$i<count($text);$i++)
+for($i=0;$i<count($outputtext);$i++)
 {
     fputs($out1,$outputtext[$i]."\r\n");
 }    
@@ -949,6 +949,43 @@ fclose ($out1);
  
 /*$outtext = str_replace("\r\n","</br>",$outtext);
  echo $outtext."</br>";*/
+
+function slptoiast($text)
+{
+    global $ch; global $yukt; global $yukt1;
+    $text=str_replace($ch['slp'],$ch['unicode'],$text);
+    $text=str_replace($yukt,$yukt1,$text);
+    return $text;
+}
+function slash($text)
+{
+$text = "/".$text."/";
+$text = str_replace("/|","|",$text);
+$text = str_replace("|/","|",$text);
+return $text;
+}
+function addhash($text)
+{
+$text = "#".$text."#";
+$text = str_replace("#|","|",$text);
+$text = str_replace("|#","|",$text);
+return $text;
+}
+function removeaccent($text)
+{
+$text = stripslashes($text);
+    $a=array("\\","/","^","-","°","*","(",")","[","]","-","?");
+    $b=array("","","","","","","","","","","","");
+$text = str_replace($a,$b,$text);
+return $text;
+}
+function addaccent($text)
+{
+    $a=array("a\\","a/","a^","ā\\","ā/","ā^","i\\","i/","i^","ī\\","ī/","ī^","u\\","u/","u^","ū\\","ū/","ū^","ṛ\\","ṛ/","ṛ^","ṝ\\","ṝ/","ṝ^","ḷ\\","ḷ/","ḷ^","e\\","e/","e^","o\\","o/","o^",);
+    $b=array("à","á","â","ā̀","ā́","ā̂","ì","í","î","ī̀","ī́","ī̂","ù","ú","û","ū̀","ū́","ū̂","ṛ̀","ṛ́","ṛ̂","ṝ̀","ṝ́","ṝ̂","ḷ̀","ḷ́","ḷ̂","è","é","ê","ò","ó","ô");
+$text = str_replace($a,$b,$text);
+return $text;
+}
 
 ?> 
         </body>
