@@ -657,7 +657,6 @@ while ($i<$count)
 $delimiters = " \-*()@\ ";
 
 $a = preg_split('/([' . $delimiters . '])/m', $text, null,PREG_SPLIT_DELIM_CAPTURE );
-// print_r ($a);
 
 // Now we find out four parameters. 
     //  $pre is the data which precedes the actual word. In our example, it is 12. 
@@ -930,7 +929,9 @@ while($i<count($test))
     
     
 // If you want to keep anusvaras and don't want to convert the panchama letters back to anusvaras, uncomment this section.    
-/*
+// $panchama is 0 by default. If you want you can change it to 1 in conf.php.
+if ($panchama===1)
+{
 $array[$i]['$original']= json_encode($array[$i]['$original']);
     $k=0;
 While($k<5)
@@ -943,7 +944,7 @@ $array[$i]['$original']= str_replace("\u092e\u094d".$pavarga[$k],"\u0902".$pavar
 $k++;
 }
 $array[$i]['$original'] = json_decode($array[$i]['$original']);
-*/
+}
   
 
     /* Coding for displaying the output in .txt file or showing in the browser. */
@@ -966,100 +967,88 @@ for($i=0;$i<count($outputtext);$i++)
 $text2= array_map('convert',$text2);
 $text2=array_map('json_encode',$text2);
 $out1=fopen($outfile,"w+");
+
 /* If you want code for header + counter for different headers + separate identity for 'kA',"khA' etc, keep this section open. */
-for($i=0;$i<count($text2);$i++)
+if ($display===1)
 {
-    
-    $a[$i]=substr($text2[$i],-7);
-    $b[$i]=substr($text2[$i],-13);
-    $x[$i]=substr($text2[$i],-19);
-    if ($x[$i]==='\u0933\u094d\u0939"' && $xx!==1)
-    {
-        $xx=1;
-        if ($i!==0)
-        {
-//        echo $i-$counter."</br>";
-        $counter=$i;
-        }
-//    echo "| ".json_decode('"'.$a[$i])." |"."</br>";
-    fputs($out1,"| ".json_decode('"'.$x[$i])." |"."\r\n");
-    }
-    elseif ($a[$i]==='\u094d"' && $b[$i]!==$b[$i-1])
-    {
-        if ($i!==0)
-        {
-//        echo $i-$counter."</br>";
-        $counter=$i;
-        }
-//    echo "| ".json_decode('"'.$b[$i])." |"."</br>";                
-    fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
-    }
-    elseif (in_array($a[$i],array('\u093e"','\u093f"','\u0940"','\u0941"','\u0942"','\u0943"','\u0944"','\u0945"','\u0946"','\u0947"','\u0948"','\u0949"','\u094a"','\u094b"','\u094c"',) ) && $b[$i]!==$b[$i-1])
-    {
-        if ($i!==0)
-        {
-//        echo $i-$counter."</br>";
-        $counter=$i;
-        } 
-//    echo "| ".json_decode('"'.$b[$i])." |"."</br>";                
-    fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
-    }
-    elseif ($a[$i]!==$a[$i-1] && !in_array($a[$i],array("\u002d")))
+    for($i=0;$i<count($text2);$i++)
     {
 
-        if ($i!==0)
+        $a[$i]=substr($text2[$i],-7);
+        $b[$i]=substr($text2[$i],-13);
+        $x[$i]=substr($text2[$i],-19);
+        if ($x[$i]==='\u0933\u094d\u0939"' && $xx!==1)
         {
-//        echo $i-$counter."</br>";
-        $counter=$i;
+            $xx=1;
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$x[$i])." |"."\r\n");
         }
-//    echo "| ".json_decode('"'.$a[$i])." |"."</br>";
-    fputs($out1,"| ".json_decode('"'.$a[$i])." |"."\r\n");
+        elseif ($a[$i]==='\u094d"' && $b[$i]!==$b[$i-1])
+        {
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
+        }
+        elseif (in_array($a[$i],array('\u093e"','\u093f"','\u0940"','\u0941"','\u0942"','\u0943"','\u0944"','\u0945"','\u0946"','\u0947"','\u0948"','\u0949"','\u094a"','\u094b"','\u094c"',) ) && $b[$i]!==$b[$i-1])
+        {
+            if ($i!==0)
+            {
+            $counter=$i;
+            } 
+        fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
+        }
+        elseif ($a[$i]!==$a[$i-1] && !in_array($a[$i],array("\u002d")))
+        {
+
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$a[$i])." |"."\r\n");
+        }
+        fputs($out1,json_decode($text[$i])."\r\n");
     }
-//    echo json_decode($text[$i])."</br>";
-    fputs($out1,json_decode($text[$i])."\r\n");
 }
-
-
 /* If you want code for header + counter for different headers (without 'kA','khA' etc), keep this section open. */
-/*for($i=0;$i<count($text);$i++)
+if ($display===2)
 {
-    $a[$i]=substr($text[$i],-7);
-    $b[$i]=substr($text[$i],-13);        
-    if ($a[$i]==='\u094d"' && $b[$i]!==$b[$i-1])
+    for($i=0;$i<count($text);$i++)
     {
-        if ($i!==0)
+        $a[$i]=substr($text[$i],-7);
+        $b[$i]=substr($text[$i],-13);        
+        if ($a[$i]==='\u094d"' && $b[$i]!==$b[$i-1])
         {
-//        echo $i-$counter."</br>";
-        $counter=$i;
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
         }
- //   echo "| ".json_decode('"'.$b[$i])." |"."</br>";                
-    fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
-    }
-    elseif ($a[$i]!==$a[$i-1])
-    {
-        if ($i!==0)
+        elseif ($a[$i]!==$a[$i-1])
         {
-//        echo $i-$counter."</br>";
-        $counter=$i;
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$a[$i])." |"."\r\n");
         }
-//    echo "| ".json_decode('"'.$a[$i])." |"."</br>";
-    fputs($out1,"| ".json_decode('"'.$a[$i])." |"."\r\n");
+        $text[$i]=  json_decode($text[$i]);
+        fputs($out1,$text[$i]."\r\n");
     }
-//    echo json_decode($text[$i])."</br>";
-    $text[$i]=  json_decode($text[$i]);
-//$fileopen=array_map('convert',$fileopen);
-
-
-    fputs($out1,$text[$i]."\r\n");
 }
-*/
-
 /* If you want only list and no header, keep this section open. */
-/*for($i=0;$i<count($text);$i++)
+if ($display===3)
 {
-    fputs($out1,$outputtext[$i]."\r\n");
-}*/
-
+    for($i=0;$i<count($text);$i++)
+    {
+        fputs($out1,$outputtext[$i]."\r\n");
+    }    
+}
 
 
 /* code for counter of pratyayas */
@@ -1071,10 +1060,8 @@ $lengthpratyayas=array_map('strlen',$pratyayasslp);
 for($i=0;$i<count($pratyayas);$i++)
 {
     $array1[$i] = array('$pratyayas' => $pratyayas[$i], '$pratyayasslp' => $pratyayasslp[$i], '$lengthpratyayas' => $lengthpratyayas[$i] );
-//    echo $pratyayas[$i]." - ".$lengthpratyayas[$i]."<br>";
 }
 usort($array1, build_sorter1('$lengthpratyayas'));
-//print_r($array1);
     foreach ($outputtext as $val1)
     {
         if (strpos($val1,'ळ्ह')!==false )
@@ -1093,7 +1080,6 @@ for ($i=0;$i<count($array1);$i++)
     }
     if (count($e)>0)
     {
-//            echo "( ".$array1[$i]['$pratyayas']." ) - ".count($e)."<br>";
             fputs($pratyayastatistics,"-".slptoiast(convert1($array1[$i]['$pratyayas']))." ".count($e)."\r\n");
             $outputtext=array_diff($outputtext,$e);
     }
@@ -1102,27 +1088,29 @@ for ($i=0;$i<count($array1);$i++)
 fclose($pratyayastatistics);
 
 /* The code for sorting pratyayawise with numbers of words ending with pratyayas. */
-
-/*foreach ($pratyayas as $value)
+if ($display===4)
 {
-    foreach ($outputtext as $val1)
+    foreach ($pratyayas as $value)
     {
-        if (substr($val1,-strlen($value))===$value)
-        {            
-            $e[]=$val1;
-        }
-    }
-    if (count($e)>0)
-    {
-            echo "। ".$value." ।";
-            foreach ($e as $val2)
-            {
-                echo "<br>".$val2;
+        foreach ($outputtext as $val1)
+        {
+            if (substr($val1,-strlen($value))===$value)
+            {            
+                $e[]=$val1;
             }
-                echo " (".count($e).")<br>";
+        }
+        if (count($e)>0)
+        {
+                echo "। ".$value." ।";
+                foreach ($e as $val2)
+                {
+                    echo "<br>".$val2;
+                }
+                    echo " (".count($e).")<br>";
+        }
+        $e=array();
     }
-    $e=array();
-}*/
+}
 
 fclose($out1);
 
@@ -1132,7 +1120,6 @@ $out2=fopen($outfile2,"w+");
 $fileopen=file($outfile);
 $fileopen=array_map('convert1',$fileopen);
 $fileopen=array_map('trim',$fileopen);
-//print_r($pratyayasslp);
 for ($i=0;$i<count($pratyayas);$i++)
 {
     $pra=preg_quote($pratyayas[$i]);
@@ -1148,9 +1135,9 @@ for ($i=0;$i<count($pratyayas);$i++)
 }
 $fileopen=array_map('slptoiast',$fileopen);
 // if you want to add '\' at the begining and the end of the word
-//$fileopen=array_map('slash',$fileopen);
+if ($slashdef===1) {$fileopen=array_map('slash',$fileopen); }
 // if you want to add # at the beginning and end of the word
-$fileopen=array_map('addhash',$fileopen);
+if ($slashdef===2) {$fileopen=array_map('addhash',$fileopen);}
 $senttext=implode("<br>",$fileopen);
 fputs($out2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
