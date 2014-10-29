@@ -932,23 +932,174 @@ $outputtext[$i] = trim($outputtext[$i]);
 $i++;
 }
 
-            /* Coding for Output to the .txt file */
-
-    
-    // write the location and the file name in which you want the output, in $trial.
-print_r($outputtext);
-$out1=fopen($outfile,"w+");
+            /* Coding for Output to the .txt file */    
+/* displaying a file with simple listing. No headers, no bookmarks. */
+$out4=fopen($outfile4,"w+");
 for($i=0;$i<count($outputtext);$i++)
 {
-    fputs($out1,$outputtext[$i]."\r\n");
+    fputs($out4,$outputtext[$i]."\r\n");
 }    
-fclose ($out1);
+fclose ($out4);
 
-    // If you want to echo the output to the browser, uncomment this section. 
-    // If you dont want to have output in .txt file, also comment the code above.
- 
-/*$outtext = str_replace("\r\n","</br>",$outtext);
- echo $outtext."</br>";*/
+/* preparation for headers and bookmarks */
+$text2= array_map('removeaccent',$outputtext);
+$outputtext = array_map('convert',$outputtext);
+$text = array_map('json_encode',$outputtext);
+for($i=0;$i<count($outputtext);$i++)
+{
+    $text1[$i]=str_replace(array("१","२","३","४","५","६","७","८","९","०"),array("","","","","","","","","","",""),$outputtext[$i]);
+    $text2[$i]=str_replace(array("1","2","3","4","5","6","7","8","9","0"),array("","","","","","","","","","",""),$text2[$i]);
+}
+$text2= array_map('convert',$text2);
+$text2=array_map('json_encode',$text2);
+$out1=fopen($outfile,"w+");
+
+/* If you want code for header + counter for different headers + separate identity for 'kA',"khA' etc, keep this section open. */
+if ($display===1)
+{
+    for($i=0;$i<count($text2);$i++)
+    {
+        $a[$i]=substr($text2[$i],0,7);
+        $b[$i]=substr($text2[$i],0,13);
+        $x[$i]=substr($text2[$i],0,19);
+ //       echo $a[$i]."-".$b[$i]."-".$x[$i]."<br>";
+        if ($x[$i]==='"\u0933\u094d\u0939' && $xx!==1)
+        {
+            $xx=1;
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode($x[$i].'"')." |"."\r\n");
+        }
+        elseif ($a[$i]==='"\u094d' && $b[$i]!==$b[$i-1])
+        {
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
+        }
+        elseif (in_array($a[$i],array('"\u093e','"\u093f"','"\u0940"','"\u0941"','"\u0942"','"\u0943"','"\u0944"','"\u0945"','"\u0946"','"\u0947"','"\u0948"','"\u0949"','"\u094a"','"\u094b"','"\u094c"',) ) && $b[$i]!==$b[$i-1])
+        {
+            if ($i!==0)
+            {
+            $counter=$i;
+            } 
+        fputs($out1,"| ".json_decode($b[$i].'"')." |"."\r\n");
+        }
+        elseif ($a[$i]!==$a[$i-1] && !in_array($a[$i],array("\u002d")))
+        {
+
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode($a[$i].'"')." |"."\r\n");
+        }
+        fputs($out1,json_decode($text[$i])."\r\n");
+    }
+}
+/* If you want code for header + counter for different headers (without 'kA','khA' etc), keep this section open. */
+if ($display===2)
+{
+    for($i=0;$i<count($text);$i++)
+    {
+        $a[$i]=substr($text[$i],-7);
+        $b[$i]=substr($text[$i],-13);        
+        if ($a[$i]==='\u094d"' && $b[$i]!==$b[$i-1])
+        {
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
+        }
+        elseif ($a[$i]!==$a[$i-1])
+        {
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$a[$i])." |"."\r\n");
+        }
+        $text[$i]=  json_decode($text[$i]);
+        fputs($out1,$text[$i]."\r\n");
+    }
+}
+/* If you want only list and no header, keep this section open. */
+if ($display===3)
+{
+    for($i=0;$i<count($text);$i++)
+    {
+        fputs($out1,$outputtext[$i]."\r\n");
+    }    
+}
+
+
+/* code for counter of pratyayas */
+$counter=0;
+$pratyayas=array_map('trim',$pratyayas);
+$outputtext=array_map('trim',$outputtext);
+$pratyayasslp=array_map('convert1',$pratyayas);
+$lengthpratyayas=array_map('strlen',$pratyayasslp);
+for($i=0;$i<count($pratyayas);$i++)
+{
+    $array1[$i] = array('$pratyayas' => $pratyayas[$i], '$pratyayasslp' => $pratyayasslp[$i], '$lengthpratyayas' => $lengthpratyayas[$i] );
+}
+usort($array1, build_sorter1('$lengthpratyayas'));
+    foreach ($outputtext as $val1)
+    {
+        if (strpos($val1,'ळ्ह')!==false )
+        {            
+             $outputtext=array_diff($outputtext,array($val1));
+        }
+    }
+for ($i=0;$i<count($array1);$i++)
+{
+    foreach ($outputtext as $val1)
+    {
+        if ((substr($val1,-strlen($array1[$i]['$pratyayas']))===$array1[$i]['$pratyayas']) )
+        {            
+            $e[]=$val1;
+        }
+    }
+    if (count($e)>0)
+    {
+            fputs($pratyayastatistics,"-".slptoiast(convert1($array1[$i]['$pratyayas']))." ".count($e)."\r\n");
+            $outputtext=array_diff($outputtext,$e);
+    }
+    $e=array();
+}
+fclose($pratyayastatistics);
+
+/* The code for sorting pratyayawise with numbers of words ending with pratyayas. */
+if ($display===4)
+{
+    foreach ($pratyayas as $value)
+    {
+        foreach ($outputtext as $val1)
+        {
+            if (substr($val1,-strlen($value))===$value)
+            {            
+                $e[]=$val1;
+            }
+        }
+        if (count($e)>0)
+        {
+                echo "। ".$value." ।";
+                foreach ($e as $val2)
+                {
+                    echo "<br>".$val2;
+                }
+                    echo " (".count($e).")<br>";
+        }
+        $e=array();
+    }
+}
+
+fclose($out1);
+
 
 function slptoiast($text)
 {

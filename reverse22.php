@@ -952,6 +952,16 @@ $outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']." ".
 $outputtext[$i] = trim($outputtext[$i]);
 $i++;
 }
+
+/* displaying a file with simple listing. No headers, no bookmarks. */
+$out4=fopen($outfile4,"w+");
+for($i=0;$i<count($outputtext);$i++)
+{
+    fputs($out4,$outputtext[$i]."\r\n");
+}    
+fclose ($out4);
+
+/* preparation for headers and bookmarks */
 $text2= array_map('removeaccent',$outputtext);
 $outputtext = array_map('convert',$outputtext);
 $text = array_map('json_encode',$outputtext);

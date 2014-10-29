@@ -11,6 +11,7 @@ $pratyayas = file($base.'morphologicends.txt');
 $outfile=$base.'devanagarisorted1.txt';
 $outfile2=$base.'devanagarisorted2.html';
 $outfile3=$base.'devanagarisorted3.html';
+$outfile4=$base.'devanagarisorted4.txt';
 $pratyayastatistics=fopen($base.'pratyayastatistics.txt',"w+");
 
 /* panchama letter option */
@@ -22,7 +23,7 @@ $display=1;
 // 2 - header + counter for different headers (without 'kA','khA' etc)
 // 3 - only list and no header
 // 4 for sorting pratyayawise with numbers of words ending with pratyayas.
-$slashdef=1; 
+$slashdef=2; 
 // 1 - add \ at the start and end of words. 
 //2 - add # at the start and end of word.
 ?>
