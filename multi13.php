@@ -937,7 +937,9 @@ $i++;
 $out4=fopen($outmulti4,"w+");
 for($i=0;$i<count($outputtext);$i++)
 {
-    fputs($out4,$outputtext[$i]."\r\n");
+    $outputtextz[$i]=slptoiast($outputtext[$i]);
+    $outputtextz[$i]=addaccent($outputtextz[$i]);
+    fputs($out4,$outputtextz[$i]."\r\n");
 }    
 fclose ($out4);
 
@@ -1037,43 +1039,6 @@ if ($display===3)
 }
 
 
-/* code for counter of pratyayas */
-$counter=0;
-$pratyayas=array_map('trim',$pratyayas);
-$outputtext=array_map('trim',$outputtext);
-$pratyayasslp=array_map('convert1',$pratyayas);
-$lengthpratyayas=array_map('strlen',$pratyayasslp);
-$pratyayastatistics_multi=fopen($pratyayamulti,'w+');
-for($i=0;$i<count($pratyayas);$i++)
-{
-    $array1[$i] = array('$pratyayas' => $pratyayas[$i], '$pratyayasslp' => $pratyayasslp[$i], '$lengthpratyayas' => $lengthpratyayas[$i] );
-}
-usort($array1, build_sorter1('$lengthpratyayas'));
-    foreach ($outputtext as $val1)
-    {
-        if (strpos($val1,'ळ्ह')!==false )
-        {            
-             $outputtext=array_diff($outputtext,array($val1));
-        }
-    }
-for ($i=0;$i<count($array1);$i++)
-{
-    foreach ($outputtext as $val1)
-    {
-        if ((substr($val1,-strlen($array1[$i]['$pratyayas']))===$array1[$i]['$pratyayas']) )
-        {            
-            $e[]=$val1;
-        }
-    }
-    if (count($e)>0)
-    {
-            fputs($pratyayastatistics_multi,"-".slptoiast(convert1($array1[$i]['$pratyayas']))." ".count($e)."\r\n");
-            $outputtext=array_diff($outputtext,$e);
-    }
-    $e=array();
-}
-fclose($pratyayastatistics_multi);
-
 /* The code for sorting pratyayawise with numbers of words ending with pratyayas. */
 if ($display===4)
 {
@@ -1100,6 +1065,86 @@ if ($display===4)
 }
 
 fclose($out1);
+
+/* Making HTML */
+$out2=fopen($outmulti2,"w+");
+$fileopen=file($outmulti1);
+$fileopen=array_map('convert1',$fileopen);
+$fileopen=array_map('trim',$fileopen);
+$fileopen=array_map('slptoiast',$fileopen);
+// if you want to add '\' at the begining and the end of the word
+if ($slashdef===1) {$fileopen=array_map('slash',$fileopen); }
+// if you want to add # at the beginning and end of the word
+if ($slashdef===2) {$fileopen=array_map('addhash',$fileopen);}
+$senttext=implode("<br>",$fileopen);
+fputs($out2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
+  <!--<meta name="language" content="hi"> -->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </meta>
+  
+</head>
+    <body>');
+fputs($out2,$senttext);
+fputs($out2,'<br></body></html>');
+fclose($out2);
+
+
+/* creating an array */
+$a=array("a","A","i","I","u","U","f","F","x","X","e","o","E","O",);
+$b=array("k","K","g","G","c","C","j","J","w","W","q","Q","R","t","T","d","D","n","p","P","b","B","m","y","r","l","v","S","z","s","L","|",);
+foreach ($a as $val1)
+{
+    foreach ($b as $val2)
+    {
+        $c[]=$val2.$val1;
+    }
+}
+$d=array_map('slptoiast',$c);
+$vowcon=array("k","kh","g","gh","ṅ","c","ch","j","jh","ñ","ṭ","ṭh","ḍ","ḍh","ṇ","t","th","d","dh","n","p","ph","b","bh","m","y","r","l","v","ś","ṣ","s","|","ḻ","a","ā","i","ī","u","ū","ṛ","ṝ","ḷ","ḹ","e","ai","o","au","ṁ","ḥ");
+/* code for creating an index like that of Oliver's */
+$in=file_get_contents($outmulti2); 
+$out3=fopen($outmulti3,"w+");
+$bookmarks=preg_split('/[|][ ]([^|]*)[ ][|]/',$in,null,PREG_SPLIT_DELIM_CAPTURE);
+fputs($out3,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
+  <!--<meta name="language" content="hi"> -->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </meta>
+  
+</head>
+    <body>');
+for($i=1;$i<count($bookmarks)/2;$i++)
+{ 
+    $p=explode("<br>",$bookmarks[2*$i]);
+    if (in_array($bookmarks[2*$i-1],$vowcon) && in_array($bookmarks[2*$i+1],$d))
+    {
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
+        fwrite($out3,$bookmarks[(2*$i)-1]." (".(count($p)-2).");<br/> ");                
+    }
+    elseif ((substr($bookmarks[2*$i-1],-1)===substr($bookmarks[2*$i+1],-1)) || in_array($bookmarks[2*$i-1],$vowcon))
+    {
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
+        fwrite($out3,$bookmarks[(2*$i)-1]." (".(count($p)-2)."), ");
+    }
+    else
+    {
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
+        fwrite($out3,$bookmarks[(2*$i)-1]." (".(count($p)-2).");<br/> ");        
+    }
+    $bookmarks[(2*$i)-1]=str_replace('-<a href="#','| <a id="',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace('</a>','</a> |',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)]=$bookmarks[(2*$i)]."<br/>";
+    $bookmarks[0]="";
+}
+fputs($out3,"<br/>");
+$finaldisplay=implode("",$bookmarks);
+$finaldisplay=addaccent($finaldisplay);
+fputs($out3,$finaldisplay);
+fclose($out3);
+
 
 
 function slptoiast($text)
