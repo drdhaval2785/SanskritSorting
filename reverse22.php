@@ -1063,6 +1063,7 @@ $pratyayas=array_map('trim',$pratyayas);
 $outputtext=array_map('trim',$outputtext);
 $pratyayasslp=array_map('convert1',$pratyayas);
 $lengthpratyayas=array_map('strlen',$pratyayasslp);
+$pratyayastatistics_reverse=fopen($pratyayareverse,'w+');
 for($i=0;$i<count($pratyayas);$i++)
 {
     $array1[$i] = array('$pratyayas' => $pratyayas[$i], '$pratyayasslp' => $pratyayasslp[$i], '$lengthpratyayas' => $lengthpratyayas[$i] );
@@ -1086,12 +1087,12 @@ for ($i=0;$i<count($array1);$i++)
     }
     if (count($e)>0)
     {
-            fputs($pratyayastatistics,"-".slptoiast(convert1($array1[$i]['$pratyayas']))." ".count($e)."\r\n");
+            fputs($pratyayastatistics_reverse,"-".slptoiast(convert1($array1[$i]['$pratyayas']))." ".count($e)."\r\n");
             $outputtext=array_diff($outputtext,$e);
     }
     $e=array();
 }
-fclose($pratyayastatistics);
+fclose($pratyayastatistics_reverse);
 
 /* The code for sorting pratyayawise with numbers of words ending with pratyayas. */
 if ($display===4)

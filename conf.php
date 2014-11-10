@@ -3,16 +3,26 @@
 
 /* input file */
 $base="D://!sorting//";
-//define('BASE_PATH','d://sorting//'); 
-$input=$base.'devanagari.txt'; 
-$pratyayas = file($base.'morphologicends.txt');
+// for reverse 
+$input=$base.'dev_reverse_input.txt'; 
+// for multi
+$in=$base.'dev_normal_input.txt';
+/* pratyaya file */
+$pratyayas = file($base.'dev_morphologicends.txt');
 
-/* Output file */
-$outfile=$base.'devanagarisorted1.txt';
-$outfile2=$base.'devanagarisorted2.html';
-$outfile3=$base.'devanagarisorted3.html';
-$outfile4=$base.'devanagarisorted4.txt';
-$pratyayastatistics=fopen($base.'pratyayastatistics.txt',"w+");
+/* Output file for reverse sorting */
+$outmulti1=$base.'normalsorted1.txt';
+$outmulti2=$base.'normalsorted2.html';
+$outmulti3=$base.'normalsorted3.html';
+$outmulti4=$base.'normalsorted4.txt';
+$pratyayamulti=$base.'pratyayastatistics_normal.txt';
+
+/* Output file for reverse sorting */
+$outfile=$base.'reversesorted1.txt';
+$outfile2=$base.'reversesorted2.html';
+$outfile3=$base.'reversesorted3.html';
+$outfile4=$base.'reversesorted4.txt';
+$pratyayareverse=$base.'pratyayastatistics_reverse.txt';
 
 /* panchama letter option */
 $panchama=0; 

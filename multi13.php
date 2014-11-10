@@ -36,7 +36,7 @@ ini_set("memory_limit","100000M");
 include "dev-slp.php";
 include "slp-dev.php";
 
-$test = file($input);
+$test = file($in);
 $orig = $test;
 $test=array_map('removeaccent',$test);
 $test = array_map('convert',$test);
@@ -934,7 +934,7 @@ $i++;
 
             /* Coding for Output to the .txt file */    
 /* displaying a file with simple listing. No headers, no bookmarks. */
-$out4=fopen($outfile4,"w+");
+$out4=fopen($outmulti4,"w+");
 for($i=0;$i<count($outputtext);$i++)
 {
     fputs($out4,$outputtext[$i]."\r\n");
@@ -952,7 +952,7 @@ for($i=0;$i<count($outputtext);$i++)
 }
 $text2= array_map('convert',$text2);
 $text2=array_map('json_encode',$text2);
-$out1=fopen($outfile,"w+");
+$out1=fopen($outmulti1,"w+");
 
 /* If you want code for header + counter for different headers + separate identity for 'kA',"khA' etc, keep this section open. */
 if ($display===1)
@@ -1043,6 +1043,7 @@ $pratyayas=array_map('trim',$pratyayas);
 $outputtext=array_map('trim',$outputtext);
 $pratyayasslp=array_map('convert1',$pratyayas);
 $lengthpratyayas=array_map('strlen',$pratyayasslp);
+$pratyayastatistics_multi=fopen($pratyayamulti,'w+');
 for($i=0;$i<count($pratyayas);$i++)
 {
     $array1[$i] = array('$pratyayas' => $pratyayas[$i], '$pratyayasslp' => $pratyayasslp[$i], '$lengthpratyayas' => $lengthpratyayas[$i] );
@@ -1066,12 +1067,12 @@ for ($i=0;$i<count($array1);$i++)
     }
     if (count($e)>0)
     {
-            fputs($pratyayastatistics,"-".slptoiast(convert1($array1[$i]['$pratyayas']))." ".count($e)."\r\n");
+            fputs($pratyayastatistics_multi,"-".slptoiast(convert1($array1[$i]['$pratyayas']))." ".count($e)."\r\n");
             $outputtext=array_diff($outputtext,$e);
     }
     $e=array();
 }
-fclose($pratyayastatistics);
+fclose($pratyayastatistics_multi);
 
 /* The code for sorting pratyayawise with numbers of words ending with pratyayas. */
 if ($display===4)
