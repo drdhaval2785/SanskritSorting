@@ -448,8 +448,8 @@ $text = str_replace("-", "- ", $text); // Ensure full vowel is given after dash
 	$text = trim(str_replace($tidys, $tidyr, $text));
 
 
-$text = str_replace("ओं","ॐ",$text);
-$text = str_replace("औं","ॐ",$text);
+//$text = str_replace("ओं","ॐ",$text);
+//$text = str_replace("औं","ॐ",$text);
 return $text;
 }
 
