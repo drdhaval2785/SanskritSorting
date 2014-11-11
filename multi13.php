@@ -22,7 +22,7 @@ ini_set('max_execution_time', 360000);
 // set memory limit to 1000 MB
 ini_set("memory_limit","100000M");
 // hides error reports.
-//error_reporting(0);
+error_reporting(0);
 // include files for conversion SLP and devanagari.
 include "dev-slp.php";
 include "slp-dev.php";
