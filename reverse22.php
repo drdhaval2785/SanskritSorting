@@ -1,12 +1,3 @@
-﻿﻿﻿﻿﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
-  <!--<meta name="language" content="hi"> -->
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </meta>
-  </META>
-</head>
-    <body>
 <?php
 
 include 'conf.php';
@@ -1146,15 +1137,7 @@ if ($slashdef===1) {$fileopen=array_map('slash',$fileopen); }
 // if you want to add # at the beginning and end of the word
 if ($slashdef===2) {$fileopen=array_map('addhash',$fileopen);}
 $senttext=implode("<br>",$fileopen);
-fputs($out2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
-  <!--<meta name="language" content="hi"> -->
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </meta>
-  
-</head>
-    <body>');
+fputs($out2,$htmlhead);
 fputs($out2,$senttext);
 fputs($out2,'<br></body></html>');
 fclose($out2);
@@ -1253,8 +1236,4 @@ function addaccent($text)
 $text = str_replace($a,$b,$text);
 return $text;
 }
-?> 
-
-
-
-        </body>
+?>

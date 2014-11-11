@@ -1,12 +1,3 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
-  <!--<meta name="language" content="hi"> -->
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </meta>
-  </META>
-</head>
-    <body>
 <?php
 
 include 'conf.php';
@@ -36,7 +27,7 @@ ini_set("memory_limit","100000M");
 include "dev-slp.php";
 include "slp-dev.php";
 
-$test = file($in);
+$test = file($input);
 $orig = $test;
 $test=array_map('removeaccent',$test);
 $test = array_map('convert',$test);
@@ -1039,30 +1030,6 @@ if ($display===3)
 }
 
 
-/* The code for sorting pratyayawise with numbers of words ending with pratyayas. */
-if ($display===4)
-{
-    foreach ($pratyayas as $value)
-    {
-        foreach ($outputtext as $val1)
-        {
-            if (substr($val1,-strlen($value))===$value)
-            {            
-                $e[]=$val1;
-            }
-        }
-        if (count($e)>0)
-        {
-                echo "। ".$value." ।";
-                foreach ($e as $val2)
-                {
-                    echo "<br>".$val2;
-                }
-                    echo " (".count($e).")<br>";
-        }
-        $e=array();
-    }
-}
 
 fclose($out1);
 
@@ -1077,15 +1044,7 @@ if ($slashdef===1) {$fileopen=array_map('slash',$fileopen); }
 // if you want to add # at the beginning and end of the word
 if ($slashdef===2) {$fileopen=array_map('addhash',$fileopen);}
 $senttext=implode("<br>",$fileopen);
-fputs($out2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
-  <!--<meta name="language" content="hi"> -->
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </meta>
-  
-</head>
-    <body>');
+fputs($out2,$htmlhead);
 fputs($out2,$senttext);
 fputs($out2,'<br></body></html>');
 fclose($out2);
@@ -1121,21 +1080,21 @@ for($i=1;$i<count($bookmarks)/2;$i++)
     $p=explode("<br>",$bookmarks[2*$i]);
     if (in_array($bookmarks[2*$i-1],$vowcon) && in_array($bookmarks[2*$i+1],$d))
     {
-    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>-",$bookmarks[(2*$i)-1]);
         fwrite($out3,$bookmarks[(2*$i)-1]." (".(count($p)-2).");<br/> ");                
     }
     elseif ((substr($bookmarks[2*$i-1],-1)===substr($bookmarks[2*$i+1],-1)) || in_array($bookmarks[2*$i-1],$vowcon))
     {
-    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>-",$bookmarks[(2*$i)-1]);
         fwrite($out3,$bookmarks[(2*$i)-1]." (".(count($p)-2)."), ");
     }
     else
     {
-    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'-<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>",$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>-",$bookmarks[(2*$i)-1]);
         fwrite($out3,$bookmarks[(2*$i)-1]." (".(count($p)-2).");<br/> ");        
     }
-    $bookmarks[(2*$i)-1]=str_replace('-<a href="#','| <a id="',$bookmarks[(2*$i)-1]);
-    $bookmarks[(2*$i)-1]=str_replace('</a>','</a> |',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace('<a href="#','| <a id="',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace('</a>-','</a> |',$bookmarks[(2*$i)-1]);
     $bookmarks[(2*$i)]=$bookmarks[(2*$i)]."<br/>";
     $bookmarks[0]="";
 }
@@ -1184,5 +1143,4 @@ $text = str_replace($a,$b,$text);
 return $text;
 }
 
-?> 
-        </body>
+?>

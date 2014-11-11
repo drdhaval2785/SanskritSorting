@@ -4,25 +4,34 @@
 /* input file */
 $base="D://!sorting//";
 // for reverse 
-$input=$base.'dev_reverse_input.txt'; 
-// for multi
-$in=$base.'dev_normal_input.txt';
+$input=$base.'input//input.txt'; 
 /* pratyaya file */
-$pratyayas = file($base.'dev_morphologicends.txt');
+$pratyayas = file($base.'input//morphologicends.txt');
 
 /* Output file for reverse sorting */
 $outmulti1=$base.'normalsorted1.txt';
 $outmulti2=$base.'normalsorted2.html';
 $outmulti3=$base.'normalsorted3.html';
 $outmulti4=$base.'normalsorted4.txt';
-$pratyayamulti=$base.'pratyayastatistics_normal.txt';
+//$pratyayamulti=$base.'pratyayastatistics_normal.txt';
 
 /* Output file for reverse sorting */
 $outfile=$base.'reversesorted1.txt';
 $outfile2=$base.'reversesorted2.html';
 $outfile3=$base.'reversesorted3.html';
 $outfile4=$base.'reversesorted4.txt';
-$pratyayareverse=$base.'pratyayastatistics_reverse.txt';
+$pratyayareverse=$base.'reverse_pratyaya_stats.txt';
+
+/*html head */
+$htmlhead='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
+  <!--<meta name="language" content="hi"> -->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </meta>
+  
+</head>
+    <body>';
 
 /* panchama letter option */
 $panchama=0; 
