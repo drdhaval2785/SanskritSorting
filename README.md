@@ -4,10 +4,12 @@ SanskritSorting
 Motivation behind the code:
 The available sorting order of Excel or other softwares don't offer proper sorting for Sanskrit texts.
 To name a few- 
+```
 saMkalpa (संकल्प) should be sorted as saNkalpa(सङ्कल्प).
 RR (ॠ) and lRR (लॄ) are not sorted properly. 
 ळ and ळ्ह are not sorted properly.
 In most of dictionary sorting - some hyphen, apostrophes etc need to be ignored while sorting.
+```
 To attend to most of these demands, we have developed this software.
 This is code to properly sort the sanskrit dictionary lists or any other list according to sanskrit order.
 
