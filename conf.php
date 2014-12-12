@@ -2,25 +2,25 @@
 /* Configuration of the Sorting Script */
 
 /* input file */
-$base="D://!sorting//";
-// for reverse 
-$input=$base.'input//input.txt'; 
+//$base="D://!sorting//";
+
+//$input=$base.'input//input.txt'; 
 /* pratyaya file */
-$pratyayas = file($base.'input//morphologicends.txt');
+//$pratyayas = file($base.'input//morphologicends.txt');
 
 /* Output file for reverse sorting */
-$outmulti1=$base.'normalsorted1.txt';
-$outmulti2=$base.'normalsorted2.html';
-$outmulti3=$base.'normalsorted3.html';
-$outmulti4=$base.'normalsorted4.txt';
+$outmulti1=$base.'//normalsorted1.txt';
+$outmulti2=$base.'//normalsorted2.html';
+$outmulti3=$base.'//normalsorted3.html';
+$outmulti4=$base.'//normalsorted4.txt';
 //$pratyayamulti=$base.'pratyayastatistics_normal.txt';
 
 /* Output file for reverse sorting */
-$outfile=$base.'reversesorted1.txt';
-$outfile2=$base.'reversesorted2.html';
-$outfile3=$base.'reversesorted3.html';
-$outfile4=$base.'reversesorted4.txt';
-$pratyayareverse=$base.'reverse_pratyaya_stats.txt';
+$outfile=$base.'//reversesorted1.txt';
+$outfile2=$base.'//reversesorted2.html';
+$outfile3=$base.'//reversesorted3.html';
+$outfile4=$base.'//reversesorted4.txt';
+$pratyayareverse=$base.'//reverse_pratyaya_stats.txt';
 
 /*html head */
 $htmlhead='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">

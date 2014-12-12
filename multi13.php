@@ -1,21 +1,27 @@
 <?php
 
+$base = $argv[1];
+if(!is_dir($base)) 
+    {
+    mkdir($base);
+    }
+$input=$argv[2];
+$arg3 = $argv[3];
+$pratyayas = file($arg3);
+
 include 'conf.php';
+error_reporting(0);
 
 /* Code written by Dr. Dhaval Patel, www.sanskritworld.in.
  * Version 1.0, Date: 2nd October, 2013
  * email: drdhaval2785@gmail.com
  * This code is free to be used, modified or altered for any purpose.
  * Please make sure to keep these lines unaltered to credit the author of the code.
+ * The purpose of this code is to create a reverse dictionary of devanagari i.e. the dictionary sorted by the last letter of the word instead of the first letter.
+ * The machine has been converted to a Command line tool now. (12 Dec 2014).
+ * The syntax is php multi13.php outputfolder input morphologicends.
+ * The actual code is run like php multi13.php d:\!sorting d:\!sorting\input\input.txt d:\!sorting\input\morphologicends.txt
  */
-
-
-/* Explanation about the data used:
- * This code is helpful for sorting data like "1234 ??? 11".
- * The number preceding the devanagari data is ignored in sorting.
- * The whole data is sorted primarily by devanagari data.
- * Thereafter the number following devanagari is sorted. Usually these suffixed numbers are used for showing homonyms of words.
-*/
 
 // set execution time to an hour
 ini_set('max_execution_time', 360000);
