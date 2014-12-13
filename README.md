@@ -2,10 +2,15 @@ SanskritSorting
 ===============
 
 Motivation behind the code:
-The available sorting order of Excel or other softwares don't offer proper sorting for Sanskrit texts.
+The available sorting order of MS Excel don't offer proper sorting for Sanskrit texts. It is not the same that we know from the classical Sanskrit dictionaries, for example <a href="http://www.sanskrit-lexicon.uni-koeln.de/scans/csldoc/dictionaries/prefaces/mdpref/mdpref10.html">MW 1899 : XIV</a> `"usual Sanskrit Dictionary order of the alphabet (see p. xxxvi)."`
+
 To name a few- 
 ```
 saMkalpa (संकल्प) should be sorted as saNkalpa(सङ्कल्प).
+```
+is of major importance. Less important, but still needed badly:
+
+```
 RR (ॠ) and lRR (लॄ) are not sorted properly. 
 ळ and ळ्ह are not sorted properly.
 In most of dictionary sorting - some hyphen, apostrophes etc need to be ignored while sorting.
