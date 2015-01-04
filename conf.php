@@ -36,7 +36,7 @@ $htmlhead='<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http:
 /* panchama letter option */
 $panchama=0; 
 // 0 - off. Default. 
-//1 - On. This optiona converts the anusvAra to corresponding panchama varga letter. e.g. aMka (अंक) -> aNka (अङ्क) 
+//1 - On. Converts the anusvAra to corresponding panchama varga letter. e.g. aMka (अंक) -> aNka (अङ्क) 
 $display=1; 
 // 1 - header + counter for different headers + separate identity for 'kA',"khA' etc
 // 2 - header + counter for different headers (without 'kA','khA' etc)
