@@ -849,6 +849,8 @@ $c[$i] = str_replace("\u0933","\u0921^",$c[$i]);
 
                 /* coding for OM */
 $c[$i] = str_replace("\u0950","\u0913\u0902",$c[$i]);
+                /* coding for tilde */
+$c[$i] = str_replace("\u007e","\u0902",$c[$i]);
 
     /* Patch for an input source where MM stands for the anunAsika and not two anusvAras */
 
