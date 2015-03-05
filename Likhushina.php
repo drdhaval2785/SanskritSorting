@@ -1,30 +1,27 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
-  <!--<meta name="language" content="hi"> -->
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  </meta>
-  </META>
-</head>
-    <body>
 <?php
 
+$base = $argv[1];
+if(!is_dir($base)) 
+    {
+    mkdir($base);
+    }
+$input=$argv[2];
+$arg3 = $argv[3];
+$pratyayas = file($arg3);
+
 include 'conf.php';
+error_reporting(0);
 
 /* Code written by Dr. Dhaval Patel, www.sanskritworld.in.
  * Version 1.0, Date: 2nd October, 2013
  * email: drdhaval2785@gmail.com
  * This code is free to be used, modified or altered for any purpose.
  * Please make sure to keep these lines unaltered to credit the author of the code.
+ * The purpose of this code is to create a reverse dictionary of devanagari i.e. the dictionary sorted by the last letter of the word instead of the first letter.
+ * The machine has been converted to a Command line tool now. (12 Dec 2014).
+ * The syntax is php multi13.php outputfolder input morphologicends.
+ * The actual code is run like php multi13.php d:\!sorting d:\!sorting\input\input.txt d:\!sorting\input\morphologicends.txt
  */
-
-
-/* Explanation about the data used:
- * This code is helpful for sorting data like "1234 ??? 11".
- * The number preceding the devanagari data is ignored in sorting.
- * The whole data is sorted primarily by devanagari data.
- * Thereafter the number following devanagari is sorted. Usually these suffixed numbers are used for showing homonyms of words.
-*/
 
 // set execution time to an hour
 ini_set('max_execution_time', 360000);
@@ -879,21 +876,26 @@ $i++;
 $i=0;
 while ($i<count($test))
 {
-$array[$i] = array('$c' => $c[$i], '$original' => $original[$i], '$pre' => $pre[$i] , '$post' => $post[$i]);
+//$array[$i] = array('$c' => $c[$i], '$original' => $original[$i], '$pre' => $pre[$i] , '$post' => $post[$i]);
+// for accents we take $orig. Otherwise for numbered series etc we take $original.
+$array[$i] = array('$c' => $c[$i], '$original' => $orig[$i], '$pre' => $pre[$i] , '$post' => $post[$i]);
 $i++;
 }
 
-
-// Obtain a list of columns
-foreach ($array as $key => $row) {
-    $c[$key]  = $row['$c'];
-    $post[$key] = $row['$post'];
+function build_sorter($key) {
+    return function ($a, $b) use ($key) {
+        return strcmp($a[$key], $b[$key]);
+    };
 }
 
-// Sort the data with $c as string ascending, $post as number by natural sorting.
-// Add $array as the last parameter, to sort by the common key
-array_multisort($c, SORT_ASC, $post, SORT_NATURAL, $array);
-//Print_r($array);
+function build_sorter1($key) {
+    return function ($a, $b) use ($key) {
+        return strcmp($b[$key], $a[$key]);
+    };
+}
+
+// Sorting $array by $c.
+usort($array, build_sorter('$c'));
 
 
 $i=0;
@@ -902,7 +904,9 @@ while($i<count($test))
     
     
 // If you want to keep anusvaras and don't want to convert the panchama letters back to anusvaras, uncomment this section.    
-/*
+// $panchama is 0 by default. If you want you can change it to 1 in conf.php.
+if ($panchama===1)
+{
 $array[$i]['$original']= json_encode($array[$i]['$original']);
     $k=0;
 While($k<5)
@@ -915,38 +919,234 @@ $array[$i]['$original']= str_replace("\u092e\u094d".$pavarga[$k],"\u0902".$pavar
 $k++;
 }
 $array[$i]['$original'] = json_decode($array[$i]['$original']);
-*/
+}
   
-    /* Changing $array[$i]['$post'] to "" where it was changed to 0 for proper sorting */
-if ($array[$i]['$post']!==0)
-{
-$outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']." ".$array[$i]['$post']));
-}
-else 
-{
-$outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']));    
-}
-
-$i++; 
-}
-
-
-$outtext = implode ($outputtext,"\r\n");
-
-            /* Coding for Output to the .txt file */
-
-    
-    // write the location and the file name in which you want the output, in $trial.
-
-$trial= fopen("C:\\devanagarisorted.txt",'w+');
-fputs($trial,$outtext);
-fclose ($trial);
-
-    // If you want to echo the output to the browser, uncomment this section. 
-    // If you dont want to have output in .txt file, also comment the code above.
+    /* Coding for displaying the output in .txt file or showing in the browser. */
  
-$outtext = str_replace("\r\n","</br>",$outtext);
- echo $outtext."</br>";
+// this will show $pre, $original and $post separated by a space. ltrim removes the left white spaces and chop removes the right white spaces if any.
+$outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']." ".$array[$i]['$post']));
+$outputtext[$i] = trim($outputtext[$i]);
+$i++;
+}
 
-?> 
-        </body>
+            /* Coding for Output to the .txt file */    
+/* displaying a file with simple listing. No headers, no bookmarks. */
+$out4=fopen($outmulti4,"w+");
+for($i=0;$i<count($outputtext);$i++)
+{
+    $outputtextz[$i]=slptoiast($outputtext[$i]);
+    $outputtextz[$i]=addaccent($outputtextz[$i]);
+    fputs($out4,$outputtextz[$i]."\r\n");
+}    
+fclose ($out4);
+
+/* preparation for headers and bookmarks */
+$text2= array_map('removeaccent',$outputtext);
+$outputtext = array_map('convert',$outputtext);
+$text = array_map('json_encode',$outputtext);
+for($i=0;$i<count($outputtext);$i++)
+{
+    $text1[$i]=str_replace(array("१","२","३","४","५","६","७","८","९","०"),array("","","","","","","","","","",""),$outputtext[$i]);
+    $text2[$i]=str_replace(array("1","2","3","4","5","6","7","8","9","0"),array("","","","","","","","","","",""),$text2[$i]);
+}
+$text2= array_map('convert',$text2);
+$text2=array_map('json_encode',$text2);
+$out1=fopen($outmulti1,"w+");
+
+/* If you want code for header + counter for different headers + separate identity for 'kA',"khA' etc, keep this section open. */
+if ($display===1)
+{
+    for($i=0;$i<count($text2);$i++)
+    {
+        $a[$i]=substr($text2[$i],0,7);
+        $b[$i]=substr($text2[$i],0,13);
+        $x[$i]=substr($text2[$i],0,19);
+ //       echo $a[$i]."-".$b[$i]."-".$x[$i]."<br>";
+        if ($x[$i]==='"\u0933\u094d\u0939' && $xx!==1)
+        {
+            $xx=1;
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode($x[$i].'"')." |"."\r\n");
+        }
+        elseif ($a[$i]==='"\u094d' && $b[$i]!==$b[$i-1])
+        {
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
+        }
+        elseif (in_array($a[$i],array('"\u093e','"\u093f"','"\u0940"','"\u0941"','"\u0942"','"\u0943"','"\u0944"','"\u0945"','"\u0946"','"\u0947"','"\u0948"','"\u0949"','"\u094a"','"\u094b"','"\u094c"',) ) && $b[$i]!==$b[$i-1])
+        {
+            if ($i!==0)
+            {
+            $counter=$i;
+            } 
+        fputs($out1,"| ".json_decode($b[$i].'"')." |"."\r\n");
+        }
+        elseif ($a[$i]!==$a[$i-1] && !in_array($a[$i],array("\u002d")))
+        {
+
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode($a[$i].'"')." |"."\r\n");
+        }
+        fputs($out1,json_decode($text[$i])."\r\n");
+    }
+}
+/* If you want code for header + counter for different headers (without 'kA','khA' etc), keep this section open. */
+if ($display===2)
+{
+    for($i=0;$i<count($text);$i++)
+    {
+        $a[$i]=substr($text[$i],-7);
+        $b[$i]=substr($text[$i],-13);        
+        if ($a[$i]==='\u094d"' && $b[$i]!==$b[$i-1])
+        {
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$b[$i])." |"."\r\n");
+        }
+        elseif ($a[$i]!==$a[$i-1])
+        {
+            if ($i!==0)
+            {
+            $counter=$i;
+            }
+        fputs($out1,"| ".json_decode('"'.$a[$i])." |"."\r\n");
+        }
+        $text[$i]=  json_decode($text[$i]);
+        fputs($out1,$text[$i]."\r\n");
+    }
+}
+/* If you want only list and no header, keep this section open. */
+if ($display===3)
+{
+    for($i=0;$i<count($text);$i++)
+    {
+        fputs($out1,$outputtext[$i]."\r\n");
+    }    
+}
+
+
+
+fclose($out1);
+
+/* Making HTML */
+$out2=fopen($outmulti2,"w+");
+$fileopen=file($outmulti1);
+$fileopen=array_map('convert1',$fileopen);
+$fileopen=array_map('trim',$fileopen);
+$fileopen=array_map('slptoiast',$fileopen);
+// if you want to add '\' at the begining and the end of the word
+if ($slashdef===1) {$fileopen=array_map('slash',$fileopen); }
+// if you want to add # at the beginning and end of the word
+if ($slashdef===2) {$fileopen=array_map('addhash',$fileopen);}
+$senttext=implode("<br>",$fileopen);
+fputs($out2,$htmlhead);
+fputs($out2,$senttext);
+fputs($out2,'<br></body></html>');
+fclose($out2);
+
+
+/* creating an array */
+$a=array("a","A","i","I","u","U","f","F","x","X","e","o","E","O",);
+$b=array("k","K","g","G","c","C","j","J","w","W","q","Q","R","t","T","d","D","n","p","P","b","B","m","y","r","l","v","S","z","s","L","|",);
+foreach ($a as $val1)
+{
+    foreach ($b as $val2)
+    {
+        $c[]=$val2.$val1;
+    }
+}
+$d=array_map('slptoiast',$c);
+$vowcon=array("k","kh","g","gh","ṅ","c","ch","j","jh","ñ","ṭ","ṭh","ḍ","ḍh","ṇ","t","th","d","dh","n","p","ph","b","bh","m","y","r","l","v","ś","ṣ","s","|","ḻ","a","ā","i","ī","u","ū","ṛ","ṝ","ḷ","ḹ","e","ai","o","au","ṁ","ḥ");
+/* code for creating an index like that of Oliver's */
+$in=file_get_contents($outmulti2); 
+$out3=fopen($outmulti3,"w+");
+$bookmarks=preg_split('/[|][ ]([^|]*)[ ][|]/',$in,null,PREG_SPLIT_DELIM_CAPTURE);
+fputs($out3,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
+  <!--<meta name="language" content="hi"> -->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </meta>
+  
+</head>
+    <body>');
+for($i=1;$i<count($bookmarks)/2;$i++)
+{ 
+    $p=explode("<br>",$bookmarks[2*$i]);
+    if (in_array($bookmarks[2*$i-1],$vowcon) && in_array($bookmarks[2*$i+1],$d))
+    {
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>-",$bookmarks[(2*$i)-1]);
+        fwrite($out3,$bookmarks[(2*$i)-1]." (".(count($p)-2).");<br/> ");                
+    }
+    elseif ((substr($bookmarks[2*$i-1],-1)===substr($bookmarks[2*$i+1],-1)) || in_array($bookmarks[2*$i-1],$vowcon))
+    {
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>-",$bookmarks[(2*$i)-1]);
+        fwrite($out3,$bookmarks[(2*$i)-1]." (".(count($p)-2)."), ");
+    }
+    else
+    {
+    $bookmarks[(2*$i)-1]=str_replace($bookmarks[2*$i-1],'<a href="#'.$bookmarks[2*$i-1].'">'.$bookmarks[2*$i-1]."</a>-",$bookmarks[(2*$i)-1]);
+        fwrite($out3,$bookmarks[(2*$i)-1]." (".(count($p)-2).");<br/> ");        
+    }
+    $bookmarks[(2*$i)-1]=str_replace('<a href="#','| <a id="',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)-1]=str_replace('</a>-','</a> |',$bookmarks[(2*$i)-1]);
+    $bookmarks[(2*$i)]=$bookmarks[(2*$i)]."<br/>";
+    $bookmarks[0]="";
+}
+fputs($out3,"<br/>");
+$finaldisplay=implode("",$bookmarks);
+$finaldisplay=addaccent($finaldisplay);
+fputs($out3,$finaldisplay);
+fclose($out3);
+
+
+
+function slptoiast($text)
+{
+    global $ch; global $yukt; global $yukt1;
+    $text=str_replace($ch['slp'],$ch['unicode'],$text);
+    $text=str_replace($yukt,$yukt1,$text);
+    return $text;
+}
+function slash($text)
+{
+$text = "/".$text."/";
+$text = str_replace("/|","|",$text);
+$text = str_replace("|/","|",$text);
+return $text;
+}
+function addhash($text)
+{
+$text = "#".$text."#";
+$text = str_replace("#|","|",$text);
+$text = str_replace("|#","|",$text);
+return $text;
+}
+function removeaccent($text)
+{
+$text = stripslashes($text);
+    $a=array("\\","/","^","-","°","*","(",")","[","]","-","?");
+    $b=array("","","","","","","","","","","","");
+$text = str_replace($a,$b,$text);
+return $text;
+}
+function addaccent($text)
+{
+    $a=array("a\\","a/","a^","ā\\","ā/","ā^","i\\","i/","i^","ī\\","ī/","ī^","u\\","u/","u^","ū\\","ū/","ū^","ṛ\\","ṛ/","ṛ^","ṝ\\","ṝ/","ṝ^","ḷ\\","ḷ/","ḷ^","e\\","e/","e^","o\\","o/","o^",);
+    $b=array("à","á","â","ā̀","ā́","ā̂","ì","í","î","ī̀","ī́","ī̂","ù","ú","û","ū̀","ū́","ū̂","ṛ̀","ṛ́","ṛ̂","ṝ̀","ṝ́","ṝ̂","ḷ̀","ḷ́","ḷ̂","è","é","ê","ò","ó","ô");
+$text = str_replace($a,$b,$text);
+return $text;
+}
+
+?>

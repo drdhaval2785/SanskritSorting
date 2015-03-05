@@ -822,7 +822,7 @@ $outputtext[$i] = trim($outputtext[$i]);
 }
 
 $text = array_map('json_encode',$outputtext);
-$outfile=fopen("C:\devanagarisorted.txt","w+");
+$outfile=fopen("C:\\devanagarisorted.txt","w+");
 
 
 /* If you want code for header + counter for different headers + separate identity for 'kA',"khA' etc, keep this section open. */
@@ -874,23 +874,23 @@ for($i=0;$i<count($text);$i++)
     {
         if ($i!==0)
         {
-        echo $i-$counter."</br>";
+//        echo $i-$counter."</br>";
         $counter=$i;
         }
-    echo "| ".json_decode('"'.$b[$i])." |"."</br>";                
+ //   echo "| ".json_decode('"'.$b[$i])." |"."</br>";                
     fputs($outfile,"| ".json_decode('"'.$b[$i])." |"."\r\n");
     }
     elseif ($a[$i]!==$a[$i-1])
     {
         if ($i!==0)
         {
-        echo $i-$counter."</br>";
+//        echo $i-$counter."</br>";
         $counter=$i;
         }
-    echo "| ".json_decode('"'.$a[$i])." |"."</br>";
+//    echo "| ".json_decode('"'.$a[$i])." |"."</br>";
     fputs($outfile,"| ".json_decode('"'.$a[$i])." |"."\r\n");
     }
-    echo json_decode($text[$i])."</br>";
+//    echo json_decode($text[$i])."</br>";
     fputs($outfile,json_decode($text[$i])."\r\n");
 }
 
@@ -927,7 +927,8 @@ for ($i=0;$i<count($array1);$i++)
     }
     if (count($e)>0)
     {
-            echo "( ".$array1[$i]['$pratyayas']." ) - ".count($e)."<br>";
+  //          echo "( ".$array1[$i]['$pratyayas']." ) - ".count($e)."<br>";
+            fputs($outfile,"( ".$array1[$i]['$pratyayas']." ) - ".count($e)."\r\n");
             $outputtext=array_diff($outputtext,$e);
     }
     $e=array();
@@ -959,27 +960,44 @@ for ($i=0;$i<count($array1);$i++)
 
 fclose($outfile);
 
- 
 
-// if you want to add # at the end of the word
-//$outtext = str_replace("\r\n","/\r\n/",$outtext)."#";
-// if you want to add '\' at the begining and the end of the word
-//$outtext = "/".str_replace("\r\n","/\r\n/",$outtext)."/";
-            
+/* Highlighting first occurrence of the pratyaya */
+// not working.
+$fileopen=file("c:\\devanagarisorted.txt");
+$fileopen=array_map('trim',$fileopen);
+$fileopen=array_map('convert1',$fileopen);
+$outfile2=fopen("C://devanagarisorted1.html","w+");
+for ($i=0;$i<count($pratyayaslp);$i++)
+{
+    $pra=preg_quote($pratyayaslp[$i]);
+            $count=0;
+    for ($j=0;$j<count($fileopen);$j++)
+    {
+        if(strpos(strrev($fileopen[$j],strrev($pratyayaslp($i)))) && $count=0)
+        {
+            $fileopen[$j]=preg_replace('/(['.$pra.'])$/','<b>'.'$0'.'</b>',$fileopen[$j]);
+            $count++;
+        }
+    }
+}
+$fileopen=array_map('convert',$fileopen);
+$senttext=implode("<br>",$fileopen);
+fputs($outfile2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
+  <!--<meta name="language" content="hi"> -->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </meta>
+  
+</head>
+    <body>');
+fputs($outfile2,$senttext);
+fputs($outfile2,'</body></html>');
+fclose($outfile2);
 
-                /* Coding for Output to the .txt file */
 
-    
-    // write the location and the file name in which you want the output, in $trial.
 
-/*$trial= fopen("C:\devanagarisorted.txt",'w+');
-fputs($trial,$outtext);
-fclose ($trial);*/
-// If you want to echo the output to the browser, uncomment this section. 
-// If you dont want to have output in .txt file, also comment the code above.
- 
-//$outtext = str_replace("\r\n","</br>",$output);
-//echo $outtext."</br>";
+
 
 /* function to convert devangari to SLP1 */
 function convert1($text)

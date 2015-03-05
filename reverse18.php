@@ -1,29 +1,33 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+﻿﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <META HTTP-EQUIV="Content-Language" CONTENT="HI">
   <!--<meta name="language" content="hi"> -->
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </meta>
-  </META>
+  
 </head>
     <body>
 <?php
-
-include 'conf.php';
 
 /* Code written by Dr. Dhaval Patel, www.sanskritworld.in.
  * Version 1.0, Date: 2nd October, 2013
  * email: drdhaval2785@gmail.com
  * This code is free to be used, modified or altered for any purpose.
  * Please make sure to keep these lines unaltered to credit the author of the code.
+ * The purpose of this code is to create a reverse dictionary of devanagari i.e. the dictionary sorted by the last letter of the word instead of the first letter.
  */
 
 
 /* Explanation about the data used:
- * This code is helpful for sorting data like "1234 ??? 11".
+ * This code is helpful for sorting data like "1234 ??? ?".
  * The number preceding the devanagari data is ignored in sorting.
  * The whole data is sorted primarily by devanagari data.
  * Thereafter the number following devanagari is sorted. Usually these suffixed numbers are used for showing homonyms of words.
+ * Usually the suffixed number doesn't exceed 9. Therefore, the code has not been developed to sort it numberically.
+ * The code will sort it alphabetically. 
+ * e.g. "1234 ??? ?","1234 ??? ?","1234 ??? ??" will be sorted wrongly.
+ * the output will be "1234 ??? ?","1234 ??? ??","1234 ??? ?". 
+ * But for regular cases, the data would not have ??. It would be less than 10. Therefore, the code has not been made to sort it.
 */
 
 // set execution time to an hour
@@ -36,10 +40,10 @@ error_reporting(0);
 include "dev-slp.php";
 include "slp-dev.php";
 
-$test = file($input);
-$orig = $test;
-$test=array_map('removeaccent',$test);
+// Read the file into an array. Please put your filename and location in place of "C:\devanagari.txt"
+$test = file("C:\devanagari.txt");
 $test = array_map('convert',$test);
+//$test = file("C:\\Users\\Dhaval\\Desktop\\devanagari.txt");
 
 // $count counts the number of members in the array $test
 $count = count($test);
@@ -136,10 +140,7 @@ $ch['unicode'] = array(
 108 => "dh", // .t
 109 => "ph", // .d 
 110 => "bh", // .n
-111 => "ai", // .d 
-112 => "au", // .n
-113 => "ḻ", // .n
-114 => "ḻh", // .n
+
 );
 
 $ch['slp'] = array(
@@ -203,10 +204,7 @@ $ch['slp'] = array(
 108 => "D", // .t
 109 => "P", // .d 
 110 => "B", // .n
-111 => "E", // .d 
-112 => "O", // .n
-113 => "L", // .n
-113 => "L", // .n
+
 );
 
 $ch['balaram'] = array(
@@ -583,55 +581,13 @@ $ch['hk'] = array(
 67 => "`", // Latin apostrophe
 
 );
-$yukt = array(
-	
-	307 => "ृ", // R joint
-	308 => "ॄ", // q joint
-	309 => "ॢ",
-	310 => "ॣ", // W  joint
-	
-	311 => "े", // e joint
-	312 => "ै", // ai joint
-	313 => "ो", // o joint
-	314 => "ौ", // au joint
-	
-	301 => "&#8205;", // a joint
-	302 => "ा", // A joint
-	303 => "ि", // i joint
-	304 => "ी", // I joint
-	305 => "ु", // u joint
-	306 => "ू", // U joint
-	320 => "ुँ",
-       
-);
-$yukt1 = array(
-
-	307 => "ṛ", // joint
-	308 => "ṝ", // joint
-	309 => "ḷ",
-	310 => "ḹ", // joint
-	
-	311 => "e", // joint
-	312 => "ai", // joint
-	313 => "o", // joint
-	314 => "au", // joint
-	
-	301 => "a", // joint
-	302 => "ā", // joint
-	303 => "i", // joint
-	304 => "ī", // joint
-	305 => "u", // joint
-	306 => "ū", // joint
-	320 => "@",
-
-);
 
 // Specify the input data type
 $type = $ch['unicode'];
-
 // Now starts the main coding part. We will run this as long as the whole array $test is exhausted
 
                 /* Coding for sorting */
+
 $i=0;
 while ($i<$count)
 { // reads the 'i'th member of the array. $test[0] would mean the first member of the array.
@@ -651,6 +607,7 @@ while ($i<$count)
 $delimiters = " \-*()@\ ";
 
 $a = preg_split('/([' . $delimiters . '])/m', $text, null,PREG_SPLIT_DELIM_CAPTURE );
+// print_r ($a);
 
 // Now we find out four parameters. 
     //  $pre is the data which precedes the actual word. In our example, it is 12. 
@@ -666,7 +623,7 @@ if (preg_match('/[0-9]+/',$a[0]))
     $pre[$i] = $a[0];
     $q=2;$c[$i] = "";
         // find out whether the last component is a number series
-        if (preg_match('/[0-9]/',$a[count($a)-1]))
+        if (preg_match('/[0-9].\r\n$/',$a[count($a)-1]))
         {//if yes, we define the four parameters accordingly.
         while($q < count($a)-1)
         {
@@ -684,7 +641,6 @@ if (preg_match('/[0-9]+/',$a[0]))
         }
         $post[$i] = "";
         $original[$i] = ltrim((chop($text,$post[$i])),$pre[$i]);
-
         }
 }
 // if the first component is not a number series
@@ -693,7 +649,7 @@ if (preg_match('/[0-9]+/',$a[0]))
     $pre[$i] = "";
     $q=0;$c[$i] = "";$original[$i]="";
         // if the last component is a number series
-        if (preg_match('/[0-9]/',$a[count($a)-1]))
+        if (preg_match('/[0-9].\r\n$/',$a[count($a)-1]))
         {//if yes, we define the four parameters accordingly.
         while($q <count($a)-1)
         {
@@ -712,10 +668,10 @@ if (preg_match('/[0-9]+/',$a[0]))
         }
         $post[$i] = "";
         $original[$i] = ltrim((chop($text,$post[$i])),$pre[$i]);
-        
         }
         
 }
+//echo json_encode("a b")."<br>";
 // Now our four parameters are defined for all four possibility. First number- last number, first number - last no number, first no number - last number, first no  number - last no number.
 
 // Now we will sort our array according to the $c parameter, because we have removed the (,*,) and such other characters from the $c.
@@ -723,9 +679,10 @@ if (preg_match('/[0-9]+/',$a[0]))
 // So now onwards we will work on the $c. Once we are good to sort it properly, we will store $c,$original,$pre and $post in an array and thereafter sort the array.
 // Thereafter we will echo only the $original, so that the original data is displayed on browser.
 
+
 /* Coding for accented marks */
 
-$c[$i] = str_replace(array("/<170/>","а","à","á","a̱","ā̱","ā́","ā̀","í̱","í","ì","ì̱","ī́","ī̀","u̱","ú","ù","ú̱","ū́","ū̀","è","é","ò","ó","ṛ́","ṛ́","ṝ","ç","१","२","३","४","५","६","७","८","९","०",),array("","a","a","a","a","ā","ā","ā","i","i","i","i","ī","ī","u","u","u","u","ū","ū","e","e","o","o","ṛ","ṛ","ṝ","ś","","","","","","","","","","",),$c[$i]);
+$c[$i] = str_replace(array("/<170/>","а","à","á","a̱","ā̱","ā́","ā̀","í̱","í","ì","ì̱","ī́","ī̀","u̱","ú","ù","ú̱","ū́","ū̀","è","é","ò","ó","ṛ́","ṛ́","ṝ","ç"),array("","a","a","a","a","ā","ā","ā","i","i","i","i","ī","ī","u","u","u","u","ū","ū","e","e","o","o","ṛ","ṛ","ṝ","ś"),$c[$i]);
   // getting the Codepoint for the UTF 8 encoded text
 $c[$i] = convert($c[$i]);
 $c[$i] = json_encode($c[$i]);
@@ -762,12 +719,10 @@ $k++;
 $q= 0;
 while($q<33)
 {
-$c[$i]= str_replace($consonants[$q].'\u094d\u200d',$consonants[$q].'\u094d',$c[$i]);
 $c[$i]= str_replace($consonants[$q].'\u094d"',$consonantreplace[$q].'\u094d"',$c[$i]);
 $c[$i]= str_replace($consonants[$q].'\u094d\r\n"',$consonantreplace[$q].'\u094d\r\n"',$c[$i]);
 $c[$i]= str_replace($consonants[$q].'\u094d\u200c\r\n"',$consonantreplace[$q].'\u094d\u200c\r\n"',$c[$i]);
 $c[$i]= str_replace($consonants[$q].'\u094d\u200c"',$consonantreplace[$q].'\u094d\u200c"',$c[$i]);
-//$c[$i]= str_replace($consonantreplace[$q].'\u094d\u200d\r\n"',$consonantreplace[$q].'\u094d\r\n"',$c[$i]);
 $q++;
 }
 
@@ -844,24 +799,20 @@ $c[$i] = str_replace("\u0961","\u090c^",$c[$i]);
 $c[$i] = str_replace("\u0962","\u0944^",$c[$i]);
 $c[$i] = str_replace("\u0963","\u0944_",$c[$i]);
 
+
                /* Coding for correcting the position of anusvAra and visarga between "au" and "ka" in reverse order. */
 $c[$i] = str_replace("\u0902\u0902","\u0914!",$c[$i]);
 $c[$i] = str_replace("\u0902","\u0914^",$c[$i]);
 $c[$i] = str_replace("\u0903","\u0914_",$c[$i]);
 
-               /* Coding for correcting the position of L and | (ळ and ळ्ह) */
-$c[$i] = str_replace("\u0933\u094d\u0939","\u0922^",$c[$i]);
-$c[$i] = str_replace("\u0933","\u0921^",$c[$i]);
-
                 /* coding for OM */
 $c[$i] = str_replace("\u0950","\u0913\u0902",$c[$i]);
 
-                /* Patch for an input source where MM stands for the anunAsika and not two anusvAras */
+    /* Patch for an input source where MM stands for the anunAsika and not two anusvAras */
 
 $original[$i] = str_replace("ंं","ँ",$original[$i]);
 
-
-            /* Coding for special characters, which are to be ignored while sorting */
+                /* Coding for special characters, which are to be ignored while sorting */
 
 // This is very important section. There are certain characters which you would like to ignore while formatting. e.g. "�" (\u00b0), "?" (\u221a) etc.
 // Put these in the $specialcharacters section at the starting of code.
@@ -872,9 +823,25 @@ $original[$i] = str_replace("ंं","ँ",$original[$i]);
 $l=0;
 while ($l<count($specialcharacters))
 {$c[$i] = str_replace($specialcharacters[$l],"",$c[$i]);$l++;}
+
+                
+
+
+                    /* Coding for reversing */
+
+// the $c[$i] is broken into an array $a by delimiter "\". Wherever \ occurs, it will create a separate item. 
+// e.g. \u0000\u0001 will be converted to an array of "","u0000" and "u0001".
+$a = explode('\\',$c[$i]);
+// reversing the array $a. therefore output will be an array of "u0001","u0000" and "".
+$b = array_reverse($a);
+// This deletes the last empty element "". Therefore the output will be something like "u0001" and "u0000" only 2 elements in the array.
+array_pop($b);
+// This will convert the array into a string with joining element as "\". Therefore the output will be u0001\u0000. This string will be sorted now.
+$c[$i] = implode("\\",$b); 
 //echo $c[$i]."</br>";
 $i++;
 }
+
 // creating a multidimentional array $araay which contains $c,$original, $pre and $post.
 $i=0;
 while ($i<count($test))
@@ -883,17 +850,21 @@ $array[$i] = array('$c' => $c[$i], '$original' => $original[$i], '$pre' => $pre[
 $i++;
 }
 
-
-// Obtain a list of columns
-foreach ($array as $key => $row) {
-    $c[$key]  = $row['$c'];
-    $post[$key] = $row['$post'];
+function build_sorter($key) {
+    return function ($a, $b) use ($key) {
+        return strcmp($a[$key], $b[$key]);
+    };
 }
 
-// Sort the data with $c as string ascending, $post as number by natural sorting.
-// Add $array as the last parameter, to sort by the common key
-array_multisort($c, SORT_ASC, $post, SORT_NATURAL, $array);
-//Print_r($array);
+function build_sorter1($key) {
+    return function ($a, $b) use ($key) {
+        return strcmp($b[$key], $a[$key]);
+    };
+}
+
+// Sorting $array by $c.
+usort($array, build_sorter('$c'));
+
 
 
 $i=0;
@@ -917,36 +888,211 @@ $k++;
 $array[$i]['$original'] = json_decode($array[$i]['$original']);
 */
   
-    /* Changing $array[$i]['$post'] to "" where it was changed to 0 for proper sorting */
-if ($array[$i]['$post']!==0)
-{
-$outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']." ".$array[$i]['$post']));
-}
-else 
-{
-$outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']));    
-}
 
-$i++; 
-}
-
-
-$outtext = implode ($outputtext,"\r\n");
-
-            /* Coding for Output to the .txt file */
-
-    
-    // write the location and the file name in which you want the output, in $trial.
-
-$trial= fopen("C:\\devanagarisorted.txt",'w+');
-fputs($trial,$outtext);
-fclose ($trial);
-
-    // If you want to echo the output to the browser, uncomment this section. 
-    // If you dont want to have output in .txt file, also comment the code above.
+    /* Coding for displaying the output in .txt file or showing in the browser. */
  
-$outtext = str_replace("\r\n","</br>",$outtext);
- echo $outtext."</br>";
+// this will show $pre, $original and $post separated by a space. ltrim removes the left white spaces and chop removes the right white spaces if any.
+$outputtext[$i] = ltrim(chop($array[$i]['$pre']." ".$array[$i]['$original']." ".$array[$i]['$post']));
+$outputtext[$i] = trim($outputtext[$i]);
 
+
+ $i++;
+ 
+}
+
+$text = array_map('json_encode',$outputtext);
+$outfile=fopen("C:\\devanagarisorted.txt","w+");
+
+
+/* If you want code for header + counter for different headers + separate identity for 'kA',"khA' etc, keep this section open. */
+/*for($i=0;$i<count($text);$i++)
+{
+    $a[$i]=substr($text[$i],-7);
+    $b[$i]=substr($text[$i],-13);
+    if ($a[$i]==='\u094d"' && $b[$i]!==$b[$i-1])
+    {
+        if ($i!==0)
+        {
+        echo $i-$counter."</br>";
+        $counter=$i;
+        }
+    echo "| ".json_decode('"'.$b[$i])." |"."</br>";                
+    fputs($outfile,"| ".json_decode('"'.$b[$i])." |"."\r\n");
+    }
+    elseif (in_array($a[$i],array('\u093e"','\u093f"','\u0940"','\u0941"','\u0942"','\u0943"','\u0944"','\u0945"','\u0946"','\u0947"','\u0948"','\u0949"','\u094a"','\u094b"','\u094c"',) ) && $b[$i]!==$b[$i-1])
+    {
+        if ($i!==0)
+        {
+        echo $i-$counter."</br>";
+        $counter=$i;
+        } 
+    echo "| ".json_decode('"'.$b[$i])." |"."</br>";                
+    fputs($outfile,"| ".json_decode('"'.$b[$i])." |"."\r\n");
+    }
+    elseif ($a[$i]!==$a[$i-1])
+    {
+        if ($i!==0)
+        {
+        echo $i-$counter."</br>";
+        $counter=$i;
+        }
+    echo "| ".json_decode('"'.$a[$i])." |"."</br>";
+    fputs($outfile,"| ".json_decode('"'.$a[$i])." |"."\r\n");
+    }
+    echo json_decode($text[$i])."</br>";
+    fputs($outfile,json_decode($text[$i])."\r\n");
+}
+*/
+
+/* If you want code for header + counter for different headers (without 'kA','khA' etc), keep this section open. */
+for($i=0;$i<count($text);$i++)
+{
+    $a[$i]=substr($text[$i],-7);
+    $b[$i]=substr($text[$i],-13);
+    if ($a[$i]==='\u094d"' && $b[$i]!==$b[$i-1])
+    {
+        if ($i!==0)
+        {
+//        echo $i-$counter."</br>";
+        $counter=$i;
+        }
+ //   echo "| ".json_decode('"'.$b[$i])." |"."</br>";                
+    fputs($outfile,"| ".json_decode('"'.$b[$i])." |"."\r\n");
+    }
+    elseif ($a[$i]!==$a[$i-1])
+    {
+        if ($i!==0)
+        {
+//        echo $i-$counter."</br>";
+        $counter=$i;
+        }
+//    echo "| ".json_decode('"'.$a[$i])." |"."</br>";
+    fputs($outfile,"| ".json_decode('"'.$a[$i])." |"."\r\n");
+    }
+//    echo json_decode($text[$i])."</br>";
+    
+    // if you want to add '\' at the begining and the end of the word
+//   $text[$i] = "/".str_replace("\r\n","/\r\n/",$text[$i])."/";
+
+    fputs($outfile,json_decode($text[$i])."\r\n");
+}
+
+
+/* If you want only list and no header, keep this section open. */
+/*for($i=0;$i<count($text);$i++)
+{
+    fputs($outfile,$outputtext[$i]."\r\n");
+}*/
+
+
+
+/* code for counter of pratyayas */
+$counter=0;
+$pratyayas = file("morphologicends.txt");
+$pratyayas=array_map('trim',$pratyayas);
+$outputtext=array_map('trim',$outputtext);
+$pratyayasslp=array_map('convert1',$pratyayas);
+$lengthpratyayas=array_map('strlen',$pratyayasslp);
+for($i=0;$i<count($pratyayas);$i++)
+{
+    $array1[$i] = array('$pratyayas' => $pratyayas[$i], '$pratyayasslp' => $pratyayasslp[$i], '$lengthpratyayas' => $lengthpratyayas[$i] );
+//    echo $pratyayas[$i]." - ".$lengthpratyayas[$i]."<br>";
+}
+usort($array1, build_sorter1('$lengthpratyayas'));
+//print_r($array1);
+
+for ($i=0;$i<count($array1);$i++)
+{
+    foreach ($outputtext as $val1)
+    {
+        if (substr($val1,-strlen($array1[$i]['$pratyayas']))===$array1[$i]['$pratyayas'])
+        {            
+            $e[]=$val1;
+        }
+    }
+    if (count($e)>0)
+    {
+//            echo "( ".$array1[$i]['$pratyayas']." ) - ".count($e)."<br>";
+            fputs($outfile,"( ".$array1[$i]['$pratyayas']." ) - ".count($e)."\r\n");
+            $outputtext=array_diff($outputtext,$e);
+    }
+    $e=array();
+}
+
+
+/* The code for sorting pratyayawise with numbers of words ending with pratyayas. */
+
+/*foreach ($pratyayas as $value)
+{
+    foreach ($outputtext as $val1)
+    {
+        if (substr($val1,-strlen($value))===$value)
+        {            
+            $e[]=$val1;
+        }
+    }
+    if (count($e)>0)
+    {
+            echo "। ".$value." ।";
+            foreach ($e as $val2)
+            {
+                echo "<br>".$val2;
+            }
+                echo " (".count($e).")<br>";
+    }
+    $e=array();
+}*/
+
+fclose($outfile);
+
+
+/* Highlighting first occurrence of the pratyaya */
+// not working.
+$fileopen=file("c:\\devanagarisorted.txt");
+$fileopen=array_map('convert1',$fileopen);
+$fileopen=array_map('trim',$fileopen);
+$outfile2=fopen("C://devanagarisorted1.html","w+");
+//print_r($pratyayasslp);
+for ($i=0;$i<count($pratyayas);$i++)
+{
+    $pra=preg_quote($pratyayas[$i]);
+            $count=0;
+    for ($j=0;$j<count($fileopen);$j++)
+    {
+        if(substr($fileopen[$j],-strlen($pratyayasslp[$i]))===$pratyayasslp[$i] && $count===0 && $fileopen[$j]!==$pratyayasslp[$i])
+        {
+  //          echo "yes";
+            $fileopen[$j]=substr($fileopen[$j],0,(strlen($fileopen[$j])-strlen($pratyayasslp[$i])))."<b>".$pratyayasslp[$i]."</b>";
+            $count++;
+        }
+    }
+}
+$fileopen=array_map('slptoiast',$fileopen);
+//$fileopen=array_map('convert',$fileopen);
+$senttext=implode("<br>",$fileopen);
+fputs($outfile2,'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <META HTTP-EQUIV="Content-Language" CONTENT="HI">
+  <!--<meta name="language" content="hi"> -->
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  </meta>
+  
+</head>
+    <body>');
+fputs($outfile2,$senttext);
+fputs($outfile2,'</body></html>');
+fclose($outfile2);
+
+
+
+function slptoiast($text)
+{
+    global $ch;
+    $text=str_replace($ch['slp'],$ch['unicode'],$text);
+    return $text;
+}
 ?> 
+
+
+
         </body>
