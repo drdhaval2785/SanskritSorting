@@ -10,7 +10,19 @@ $arg3 = $argv[3];
 $pratyayas = file($arg3);
 
 include 'conf.php';
-error_reporting(0);
+//error_reporting(0);
+$header = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<!--... Defining UTF-8 as our default character set, so that devanagari is displayed properly. -->
+<meta charset="UTF-8">
+<!--... Defining CSS -->
+<link rel="stylesheet" type="text/css" href="mystyle.css">
+<!--... including Ajax jquery. -->
+</head> 
+<body>
+';
+//echo $header;
 
 /* Code written by Dr. Dhaval Patel, www.sanskritworld.in.
  * Version 1.0, Date: 2nd October, 2013
@@ -27,8 +39,6 @@ error_reporting(0);
 ini_set('max_execution_time', 360000);
 // set memory limit to 1000 MB
 ini_set("memory_limit","100000M");
-// hides error reports.
-error_reporting(0);
 // include files for conversion SLP and devanagari.
 include "dev-slp.php";
 include "slp-dev.php";
@@ -63,7 +73,7 @@ $specialcharacters = array("\u00b0","\u221a","\u02da","\u0300","\u0301","\u0331"
 // In other words add "\r\n" at the end of your data.
 
 
-// defining certain arrays for removing the GRETIL abbreviations
+	// defining certain arrays for removing the GRETIL abbreviations
 $capital = 'AĀIĪUŪRṚEOKGṄCJÑṬḌṆTDNPBMYLVŚṢSH';
 $small = 'abcdefghijklmnopqrstuv){}';
 $ns = '0123456789_.,){}:\/-';
@@ -646,9 +656,7 @@ while ($i<$count)
    // Array ( [0] => ?12 [1] => [2] => ??? [3] => [4] => ?? ). Here the even numbers are the main data and the odd numbers are the delimiters - in this case " ".
    
 $delimiters = " \-*()@\ ";
-
 $a = preg_split('/([' . $delimiters . '])/m', $text, null,PREG_SPLIT_DELIM_CAPTURE );
-
 // Now we find out four parameters. 
     //  $pre is the data which precedes the actual word. In our example, it is 12. 
     // $c is the actual data which is to be sorted. In our example it is ???
@@ -690,8 +698,9 @@ if (preg_match('/[0-9]+/',$a[0]))
     $pre[$i] = "";
     $q=0;$c[$i] = "";$original[$i]="";
         // if the last component is a number series
-        if (preg_match('/[0-9]/',$a[count($a)-1]))
-        {//if yes, we define the four parameters accordingly.
+        if (preg_match('/[0-9, ]+/',$a[count($a)-1]))
+        {
+			echo "last is number";//if yes, we define the four parameters accordingly.
         while($q <count($a)-1)
         {
             $c[$i] = $c[$i].$a[$q];
@@ -709,9 +718,7 @@ if (preg_match('/[0-9]+/',$a[0]))
         }
         $post[$i] = "";
         $original[$i] = ltrim((chop($text,$post[$i])),$pre[$i]);
-        
         }
-        
 }
 // Now our four parameters are defined for all four possibility. First number- last number, first number - last no number, first no number - last number, first no  number - last no number.
 
@@ -721,7 +728,6 @@ if (preg_match('/[0-9]+/',$a[0]))
 // Thereafter we will echo only the $original, so that the original data is displayed on browser.
 
 /* Coding for accented marks */
-
 $c[$i] = str_replace(array("/<170/>","а","à","á","a̱","ā̱","ā́","ā̀","í̱","í","ì","ì̱","ī́","ī̀","u̱","ú","ù","ú̱","ū́","ū̀","è","é","ò","ó","ṛ́","ṛ́","ṝ","ç","१","२","३","४","५","६","७","८","९","०",),array("","a","a","a","a","ā","ā","ā","i","i","i","i","ī","ī","u","u","u","u","ū","ū","e","e","o","o","ṛ","ṛ","ṝ","ś","","","","","","","","","","",),$c[$i]);
   // getting the Codepoint for the UTF 8 encoded text
 $c[$i] = convert($c[$i]);
@@ -869,8 +875,8 @@ $original[$i] = str_replace("ंं","ँ",$original[$i]);
 $l=0;
 while ($l<count($specialcharacters))
 {$c[$i] = str_replace($specialcharacters[$l],"",$c[$i]);$l++;}
-//echo $c[$i]."</br>";
 $i++;
+
 }
 // creating a multidimentional array $araay which contains $c,$original, $pre and $post.
 $i=0;
@@ -881,7 +887,6 @@ while ($i<count($test))
 $array[$i] = array('$c' => $c[$i], '$original' => $orig[$i], '$pre' => $pre[$i] , '$post' => $post[$i]);
 $i++;
 }
-
 function build_sorter($key) {
     return function ($a, $b) use ($key) {
         return strcmp($a[$key], $b[$key]);
