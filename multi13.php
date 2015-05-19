@@ -763,6 +763,7 @@ $k++;
 
 // converting the terminal halant ($consontans + \u094d)  as ($consonantreplace + \u094d so as to place it before akArAnta consonant. 
 $q= 0;
+
 while($q<33)
 {
 $c[$i]= str_replace($consonants[$q].'\u094d\u200d',$consonants[$q].'\u094d',$c[$i]);
@@ -773,7 +774,7 @@ $c[$i]= str_replace($consonants[$q].'\u094d\u200c"',$consonantreplace[$q].'\u094
 //$c[$i]= str_replace($consonantreplace[$q].'\u094d\u200d\r\n"',$consonantreplace[$q].'\u094d\r\n"',$c[$i]);
 $q++;
 }
-
+$c[$i] = preg_replace('/(\\\u[0-9abcdef]{4})(\\\u094d)$/','!$1$2',$c[$i]);
             /* The code for deciding the position of visarga 
              * This has been done with help of Siddhanta Kaumudi ( a textbook of sanskrit grammar)
              */
